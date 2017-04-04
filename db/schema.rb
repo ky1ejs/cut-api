@@ -14,9 +14,10 @@ ActiveRecord::Schema.define(version: 20170404125052) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "citext"
 
   create_table "films", force: :cascade do |t|
-    t.string   "title",                     null: false
+    t.citext   "title",                     null: false
     t.datetime "theater_release_date"
     t.integer  "running_time",              null: false
     t.float    "rotten_tomatoes_score"
@@ -25,14 +26,17 @@ ActiveRecord::Schema.define(version: 20170404125052) do
     t.string   "synopsis"
     t.datetime "created_at",                null: false
     t.datetime "updated_at",                null: false
+    t.index ["title"], name: "index_films_on_title", unique: true, using: :btree
   end
 
   create_table "posters", force: :cascade do |t|
     t.integer  "film_id",    null: false
-    t.string   "url",        null: false
+    t.citext   "url",        null: false
     t.integer  "size",       null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["size", "film_id"], name: "index_posters_on_size_and_film_id", unique: true, using: :btree
+    t.index ["url"], name: "index_posters_on_url", unique: true, using: :btree
   end
 
   add_foreign_key "posters", "films", on_delete: :cascade

@@ -1,7 +1,9 @@
 class CreateFilms < ActiveRecord::Migration[5.0]
   def change
+    enable_extension :citext
+
     create_table :films do |t|
-      t.string      :title,                      null: false
+      t.citext      :title,                      null: false, index: { :unique => true }
       t.datetime    :theater_release_date
       t.integer     :running_time,               null: false
       t.float       :rotten_tomatoes_score
