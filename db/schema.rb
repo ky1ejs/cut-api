@@ -18,15 +18,16 @@ ActiveRecord::Schema.define(version: 20170404125052) do
   enable_extension "uuid-ossp"
 
   create_table "films", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
-    t.citext   "title",                     null: false
+    t.citext   "title",                             null: false
     t.datetime "theater_release_date"
     t.integer  "running_time"
     t.float    "rotten_tomatoes_score"
     t.float    "external_user_score"
-    t.float    "external_user_score_count"
+    t.integer  "external_user_score_count"
+    t.integer  "external_user_want_to_watch_count"
     t.string   "synopsis"
-    t.datetime "created_at",                null: false
-    t.datetime "updated_at",                null: false
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
     t.index ["title"], name: "index_films_on_title", unique: true, using: :btree
   end
 

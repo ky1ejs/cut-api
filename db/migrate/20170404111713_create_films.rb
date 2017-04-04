@@ -9,7 +9,8 @@ class CreateFilms < ActiveRecord::Migration[5.0]
       t.integer     :running_time
       t.float       :rotten_tomatoes_score
       t.float       :external_user_score
-      t.float       :external_user_score_count
+      t.integer     :external_user_score_count
+      t.integer     :external_user_want_to_watch_count
       t.string      :synopsis
 
       t.timestamps  null: false
