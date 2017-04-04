@@ -15,8 +15,8 @@ class FlixsterControllerController < ApplicationController
     response = HTTParty.get 'https://api.flixster.com/iphone/api/v2/movies.json', query: query
     json = JSON.parse response, symbolize_names: true
     json.map do |film_json|
+      film = Film.from_flixster film_json
       begin
-        film = Film.from_flixster film_json
         film.save!
       rescue => exception
         puts exception
