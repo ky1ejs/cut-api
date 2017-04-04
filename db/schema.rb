@@ -20,7 +20,7 @@ ActiveRecord::Schema.define(version: 20170404125052) do
   create_table "films", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.citext   "title",                     null: false
     t.datetime "theater_release_date"
-    t.integer  "running_time",              null: false
+    t.integer  "running_time"
     t.float    "rotten_tomatoes_score"
     t.float    "external_user_score"
     t.float    "external_user_score_count"

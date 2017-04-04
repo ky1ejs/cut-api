@@ -6,7 +6,7 @@ class CreateFilms < ActiveRecord::Migration[5.0]
     create_table :films, id: :uuid do |t|
       t.citext      :title,                      null: false, index: { :unique => true }
       t.datetime    :theater_release_date
-      t.integer     :running_time,               null: false
+      t.integer     :running_time
       t.float       :rotten_tomatoes_score
       t.float       :external_user_score
       t.float       :external_user_score_count
