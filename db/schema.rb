@@ -16,9 +16,15 @@ ActiveRecord::Schema.define(version: 20170404111713) do
   enable_extension "plpgsql"
 
   create_table "films", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string   "title"
+    t.string   "title",                     null: false
+    t.datetime "theater_release_date"
+    t.integer  "running_time",              null: false
+    t.float    "rotten_tomatoes_score"
+    t.float    "external_user_score"
+    t.float    "external_user_score_count"
+    t.string   "synopsis"
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
   end
 
 end
