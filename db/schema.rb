@@ -15,8 +15,9 @@ ActiveRecord::Schema.define(version: 20170404125052) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "citext"
+  enable_extension "uuid-ossp"
 
-  create_table "films", force: :cascade do |t|
+  create_table "films", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.citext   "title",                     null: false
     t.datetime "theater_release_date"
     t.integer  "running_time",              null: false
@@ -29,8 +30,8 @@ ActiveRecord::Schema.define(version: 20170404125052) do
     t.index ["title"], name: "index_films_on_title", unique: true, using: :btree
   end
 
-  create_table "posters", force: :cascade do |t|
-    t.integer  "film_id",    null: false
+  create_table "posters", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
+    t.uuid     "film_id",    null: false
     t.citext   "url",        null: false
     t.integer  "size",       null: false
     t.datetime "created_at", null: false
