@@ -28,9 +28,12 @@ ActiveRecord::Schema.define(version: 20170404125052) do
   end
 
   create_table "posters", force: :cascade do |t|
-    t.integer  "film_id"
+    t.integer  "film_id",    null: false
+    t.string   "url",        null: false
+    t.integer  "size",       null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "posters", "films", on_delete: :cascade
 end
