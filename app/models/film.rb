@@ -7,9 +7,20 @@ class Film < ApplicationRecord
     has_many :posters
 
     def self.from_flixster(json)
+      title = json[:title]
+
+      running_time_string = json[:runningTime]
+      running_time_regex = /(?<hours>\d{1}) hr\. ?(?<mins>\d{1,2})?/
+      running_time_data = running_time_string.match(running_time_regex)
+
+      if !running_time_data.nil?
+        hours = running_time_data[:hours].to_i * 60
+        running_time = hours + running_time_data[:mins].to_i
+      end
+
       f = Film.new
-      f.title = json[:title]
-      f.running_time = json[:runningTime].to_i
+      f.title = title
+      f.running_time = running_time
       return f
     end
 end
