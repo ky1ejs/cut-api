@@ -3,7 +3,7 @@ Rails.application.routes.draw do
 
   scope '/v1' do
     scope '/films' do
-      get '/' => 'film_controller#index'
+      get '/' => 'film#index'
     end
   end
 end

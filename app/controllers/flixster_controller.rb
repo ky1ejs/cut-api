@@ -1,6 +1,6 @@
 require 'httparty'
 
-class FlixsterControllerController < ApplicationController
+class FlixsterController < ApplicationController
   def fetch_popular
     query = {
       "cbr" => "1",
