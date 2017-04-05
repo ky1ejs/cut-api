@@ -5,5 +5,8 @@ Rails.application.routes.draw do
     scope '/films' do
       get '/' => 'film#index'
     end
+    scope '/devices' do
+      post '/' => 'device#register_device'
+    end
   end
 end
