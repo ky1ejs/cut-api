@@ -20,7 +20,7 @@ class Film < ApplicationRecord
       end
 
 
-      r_t_score = json[:reviews][:rottenTomatoes][:rating]
+      r_t_score = json[:reviews][:rottenTomatoes].try(:[], :rating)
       rotten_tomatoes_score = r_t_score / Float(100) unless r_t_score.nil?
 
       fx_user_scores = json[:reviews][:flixster]
