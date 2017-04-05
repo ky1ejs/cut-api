@@ -5,7 +5,7 @@ class CreateUsers < ActiveRecord::Migration[5.0]
 
     create_table :users, id: :uuid do |t|
       t.citext    :email,     index: { :unique => true }
-      t.datetime  :last_seen, null: false, default: Time.now
+      t.datetime  :last_seen, null: false
 
       t.timestamps
     end

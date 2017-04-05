@@ -7,7 +7,7 @@ class CreateDevices < ActiveRecord::Migration[5.0]
       t.uuid      :user_id,     null: false
       t.citext    :name
       t.integer   :type,        null: false
-      t.datetime  :last_seen,   null: false, default: 'now()'
+      t.datetime  :last_seen,   null: false
       t.string    :push_token
 
       t.timestamps              null: false

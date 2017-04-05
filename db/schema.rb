@@ -18,13 +18,13 @@ ActiveRecord::Schema.define(version: 20170405074452) do
   enable_extension "uuid-ossp"
 
   create_table "devices", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
-    t.uuid     "user_id",                                    null: false
+    t.uuid     "user_id",    null: false
     t.citext   "name"
-    t.integer  "type",                                       null: false
-    t.datetime "last_seen",  default: '2017-04-05 21:05:26', null: false
+    t.integer  "type",       null: false
+    t.datetime "last_seen",  null: false
     t.string   "push_token"
-    t.datetime "created_at",                                 null: false
-    t.datetime "updated_at",                                 null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "films", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
@@ -53,9 +53,9 @@ ActiveRecord::Schema.define(version: 20170405074452) do
 
   create_table "users", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.citext   "email"
-    t.datetime "last_seen",  default: '2017-04-05 21:05:26', null: false
-    t.datetime "created_at",                                 null: false
-    t.datetime "updated_at",                                 null: false
+    t.datetime "last_seen",  null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
   end
 
