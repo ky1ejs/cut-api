@@ -1,4 +1,5 @@
 class Device < ApplicationRecord
+  self.inheritance_column = "inheritance"
   enum type: [ :ios, :android ]
 
   belongs_to :user
