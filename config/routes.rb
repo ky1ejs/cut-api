@@ -8,5 +8,8 @@ Rails.application.routes.draw do
     scope '/devices' do
       post '/' => 'device#register_device'
     end
+    scope '/watch-list' do
+      get '/' => 'watch_list#index'
+    end
   end
 end

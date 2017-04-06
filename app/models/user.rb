@@ -1,6 +1,6 @@
 class User < ApplicationRecord
   has_many :devices
-  has_many :want_to_watch
+  has_many :watch_list, foreign_key: :user_id, class_name: "WantToWatch"
 
   before_create :set_initial_last_seen
   protected
