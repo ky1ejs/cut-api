@@ -10,6 +10,7 @@ Rails.application.routes.draw do
     end
     scope '/watch-list' do
       get '/' => 'watch_list#index'
+      post '/' => 'watch_list#add_film_to_watch_list'
     end
   end
 end
