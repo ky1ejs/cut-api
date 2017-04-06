@@ -14,13 +14,16 @@ class FlixsterController < ApplicationController
     }
     response = HTTParty.get 'https://api.flixster.com/iphone/api/v2/movies.json', query: query
     json = JSON.parse response, symbolize_names: true
+    films = []
     json.map do |film_json|
       film = Film.from_flixster film_json
       begin
         film.save!
+        films.push film
       rescue => exception
         puts exception
       end
     end
+    return films
   end
 end
