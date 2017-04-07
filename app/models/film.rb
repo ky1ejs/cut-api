@@ -19,7 +19,6 @@ class Film < ApplicationRecord
         running_time = hours + running_time_data[:mins].to_i
       end
 
-
       r_t_score = json[:reviews][:rottenTomatoes].try(:[], :rating)
       rotten_tomatoes_score = r_t_score / Float(100) unless r_t_score.nil?
 
@@ -35,6 +34,7 @@ class Film < ApplicationRecord
       day = t_release_date[:day].to_i
       theater_release_date = Date.new year, month, day unless year == 0 || month == 0 || day == 0
 
+
       f = Film.new
       f.title = title
       f.running_time = running_time
@@ -45,6 +45,29 @@ class Film < ApplicationRecord
       f.synopsis = json[:synopsis]
       f.theater_release_date = theater_release_date
 
+      flixster_poster_type_map = {
+        :thumbnail => :thumbnail,
+        :profile => :medium,
+        :detailed => :large
+      }
+      posters_json = json[:poster]
+      f.posters = posters_json.map do |key, value|
+        poster = Poster.new
+        poster.size = flixster_poster_type_map[key]
+        poster.url = posters_json[key]
+        poster
+      end
+
       return f
+    end
+
+    def as_json(options = {})
+      json = super(options)
+      if options[:include] == :posters
+        posters = {}
+        json['posters'].each { |poster| posters[poster['size']] = poster }
+        json['posters'] = posters
+      end
+      json
     end
 end

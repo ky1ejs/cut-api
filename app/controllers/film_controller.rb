@@ -1,7 +1,9 @@
 class FilmController < ApplicationController
   def index
+    FlixsterController.new.fetch_popular
+
     watch_films_ids = Device.find(params[:device_id]).user.watch_list.map { |watch| watch.film.id }
-    all_films_json = FlixsterController.new.fetch_popular.as_json
+    all_films_json = Film.all.as_json(include: :posters)
 
     i = 0
     while i < all_films_json.count  do
