@@ -2,7 +2,7 @@ class FilmController < ApplicationController
   def index
     FlixsterController.new.fetch_popular
 
-    watch_films_ids = Device.find(params[:device_id]).user.watch_list.map { |watch| watch.film.id }
+    watch_films_ids = device.user.watch_list.map { |watch| watch.film.id }
     all_films_json = Film.all.as_json(include: :posters)
 
     i = 0
