@@ -14,6 +14,7 @@ Rails.application.routes.draw do
     end
     scope '/users' do
       get '/' => 'user#get_current_user'
+      get '/:username' => 'user#get_user'
       post '/' => 'user#create_login'
       scope '/devices' do
         post '/' => 'user#add_device_to_user'
