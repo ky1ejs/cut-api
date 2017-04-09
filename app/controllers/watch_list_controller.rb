@@ -4,8 +4,8 @@ class WatchListController < ApplicationController
   end
 
   def add_film_to_watch_list
-    device = Device.find(params[:device_id])
     film = Film.find(params[:film_id])
     WantToWatch.find_or_create_by(user: device.user, film: film)
+    render status: 200
   end
 end
