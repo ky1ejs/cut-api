@@ -12,5 +12,12 @@ Rails.application.routes.draw do
       get '/' => 'watch_list#index'
       post '/' => 'watch_list#add_film_to_watch_list'
     end
+    scope '/users' do
+      get '/' => 'user#get_current_user'
+      post '/' => 'user#create_login'
+      scope '/devices' do
+        post '/' => 'user#add_device_to_user'
+      end
+    end
   end
 end

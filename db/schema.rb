@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170405074452) do
+ActiveRecord::Schema.define(version: 20170409160922) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -41,6 +41,14 @@ ActiveRecord::Schema.define(version: 20170405074452) do
     t.index ["title"], name: "index_films_on_title", unique: true, using: :btree
   end
 
+  create_table "follows", force: :cascade do |t|
+    t.uuid     "follower"
+    t.uuid     "following"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["follower", "following"], name: "index_follows_on_follower_and_following", unique: true, using: :btree
+  end
+
   create_table "posters", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.uuid     "film_id",    null: false
     t.citext   "url",        null: false
@@ -53,10 +61,13 @@ ActiveRecord::Schema.define(version: 20170405074452) do
 
   create_table "users", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.citext   "email"
-    t.datetime "last_seen",  null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.citext   "username"
+    t.string   "hashed_password"
+    t.datetime "last_seen",       null: false
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
     t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
+    t.index ["username"], name: "index_users_on_username", unique: true, using: :btree
   end
 
   create_table "want_to_watches", force: :cascade do |t|
@@ -68,6 +79,8 @@ ActiveRecord::Schema.define(version: 20170405074452) do
   end
 
   add_foreign_key "devices", "users", on_delete: :cascade
+  add_foreign_key "follows", "users", column: "follower", on_delete: :cascade
+  add_foreign_key "follows", "users", column: "following", on_delete: :cascade
   add_foreign_key "posters", "films", on_delete: :cascade
   add_foreign_key "want_to_watches", "films", on_delete: :cascade
   add_foreign_key "want_to_watches", "users", on_delete: :cascade
