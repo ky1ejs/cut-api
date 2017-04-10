@@ -7,8 +7,12 @@ class User < ApplicationRecord
   has_many :followers, through: :follower_records
   has_many :following, through: :following_records
 
-  def can_login
-    self.email != nil
+  def full_user_fields
+    [self.email, self.hashed_password, self.username]
+  end
+
+  def is_full_user
+    full_user_fields.all? { |e| !e.nil?  }
   end
 
   def as_json(options = {})
@@ -18,8 +22,17 @@ class User < ApplicationRecord
   end
 
   before_validation :set_initial_last_seen, on: :create
+  validate :validate_full_user
+
   protected
+
   def set_initial_last_seen
     self.last_seen ||= Time.now
+  end
+
+  def validate_full_user
+    error_message = 'If email, username or hashed_password is set, they must all be set'
+    any_fields_not_nil = full_user_fields.any? { |e| !e.nil?  }
+    errors.add :base, error_message if any_fields_not_nil && !is_full_user
   end
 end
