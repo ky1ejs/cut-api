@@ -17,7 +17,7 @@ class User < ApplicationRecord
 
   def as_json(options = {})
     json = super(options)
-    json['can_login'] = can_login
+    json['is_full_user'] = is_full_user
     json
   end
 
