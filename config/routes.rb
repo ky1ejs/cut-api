@@ -5,9 +5,6 @@ Rails.application.routes.draw do
     scope '/films' do
       get '/' => 'film#index'
     end
-    scope '/devices' do
-      post '/' => 'device#register_device'
-    end
     scope '/watch-list' do
       get '/' => 'watch_list#index'
       post '/' => 'watch_list#add_film_to_watch_list'
@@ -15,6 +12,7 @@ Rails.application.routes.draw do
     scope '/users' do
       get '/' => 'user#get_current_user'
       get '/:username' => 'user#get_user'
+      post '/:username' => 'user#follow_user'
       post '/' => 'user#create_login'
       scope '/devices' do
         post '/' => 'user#add_device_to_user'

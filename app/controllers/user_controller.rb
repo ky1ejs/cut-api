@@ -43,4 +43,16 @@ class UserController < ApplicationController
 
     render status: 200
   end
+
+  def follow_user
+    username = params[:username]
+
+    if username == device.user.username
+      render status: 422
+      return
+    end
+
+    u = User.find_by(username: username)
+    Follow.find_or_create_by(follower: device.user, following: u).save!
+  end
 end

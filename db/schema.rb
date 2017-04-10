@@ -41,12 +41,12 @@ ActiveRecord::Schema.define(version: 20170409160922) do
     t.index ["title"], name: "index_films_on_title", unique: true, using: :btree
   end
 
-  create_table "follows", force: :cascade do |t|
-    t.uuid     "follower"
-    t.uuid     "following"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["follower", "following"], name: "index_follows_on_follower_and_following", unique: true, using: :btree
+  create_table "follows", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
+    t.uuid     "follower_id"
+    t.uuid     "following_id"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.index ["follower_id", "following_id"], name: "index_follows_on_follower_id_and_following_id", unique: true, using: :btree
   end
 
   create_table "posters", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
@@ -79,8 +79,8 @@ ActiveRecord::Schema.define(version: 20170409160922) do
   end
 
   add_foreign_key "devices", "users", on_delete: :cascade
-  add_foreign_key "follows", "users", column: "follower", on_delete: :cascade
-  add_foreign_key "follows", "users", column: "following", on_delete: :cascade
+  add_foreign_key "follows", "users", column: "follower_id", on_delete: :cascade
+  add_foreign_key "follows", "users", column: "following_id", on_delete: :cascade
   add_foreign_key "posters", "films", on_delete: :cascade
   add_foreign_key "want_to_watches", "films", on_delete: :cascade
   add_foreign_key "want_to_watches", "users", on_delete: :cascade
