@@ -14,7 +14,7 @@ class UserController < ApplicationController
   def create_login
     u = device.user
 
-    if u.can_login
+    if u.is_full_user
       render status: 422
       return
     end
@@ -23,7 +23,8 @@ class UserController < ApplicationController
     u.email = params[:email]
     u.hashed_password = params[:password]
     u.save!
-    render status: 200
+    
+    render json: u
   end
 
   def add_device_to_user
