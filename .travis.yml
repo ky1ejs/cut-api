@@ -1,9 +1,0 @@
-language: ruby
-git:
-  depth: 1
-rvm:
-  - 2.3.1
-services:
-  - postgresql
-before_script:
-  bundle exec rake db:migrate
