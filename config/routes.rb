@@ -18,5 +18,8 @@ Rails.application.routes.draw do
         post '/' => 'user#add_device_to_user'
       end
     end
+    scope '/search' do
+      get '/' => 'search#search'
+    end
   end
 end
