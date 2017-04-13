@@ -34,7 +34,6 @@ class Film < ApplicationRecord
       day = t_release_date[:day].to_i
       theater_release_date = Date.new year, month, day unless year == 0 || month == 0 || day == 0
 
-
       f = Film.new
       f.title = title
       f.running_time = running_time

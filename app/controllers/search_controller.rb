@@ -4,7 +4,7 @@ class SearchController < ApplicationController
     film_results = Film.where "title LIKE ?", "%#{params[:term]}%"
     json = {
       'users' => user_results.as_json,
-      'films' => film_results.as_json
+      'films' => film_results.as_json(include: :posters)
     }
     render json: json
   end
