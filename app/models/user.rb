@@ -1,5 +1,6 @@
 require 'httparty'
 require 'digest/md5'
+require 'bcrypt'
 
 class User < ApplicationRecord
   has_many :devices
@@ -10,12 +11,12 @@ class User < ApplicationRecord
   has_many :followers, through: :follower_records
   has_many :following, through: :following_records
 
-  def full_user_fields
-    [self.email, self.hashed_password, self.username]
+  def is_password_set
+    !self.password.nil? || (!self.hashed_password.nil? && !self.salt.nil?)
   end
 
   def is_full_user
-    full_user_fields.all? { |e| !e.nil?  }
+    is_password_set && [self.email, self.username].all? { |e| !e.nil?  }
   end
 
   def as_json(options = {})
@@ -35,18 +36,45 @@ class User < ApplicationRecord
     json
   end
 
+  def check_password(password)
+    hashed_password = BCrypt::Engine.hash_secret(password, self.salt)
+    return self.hashed_password == hashed_password
+  end
+
+  attr_accessor :password
+
   before_validation :set_initial_last_seen, on: :create
+  before_save :encrypt_password
+  after_save :clear_password
+
+  EMAIL_REGEX = /\A[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\z/i
   validate :validate_full_user
+  validates :username, :presence => true, :allow_nil => true, :uniqueness => true
+  validates :password, :presence => true, :allow_nil => true
+  validates :email, :presence => true, :allow_nil => true, :uniqueness => true, :format => EMAIL_REGEX
 
   protected
+
+  attr_accessor :hashed_password, :salt
 
   def set_initial_last_seen
     self.last_seen ||= Time.now
   end
 
   def validate_full_user
-    error_message = 'If email, username or hashed_password is set, they must all be set'
+    error_message = "Mandatory full user fields not complete #{full_user_fields}"
     any_fields_not_nil = full_user_fields.any? { |e| !e.nil?  }
     errors.add :base, error_message if any_fields_not_nil && !is_full_user
+  end
+
+  def encrypt_password
+    if password.present?
+      self.salt = BCrypt::Engine.generate_salt
+      self.hashed_password = BCrypt::Engine.hash_secret(password, salt)
+    end
+  end
+
+  def clear_password
+    self.password = nil
   end
 end

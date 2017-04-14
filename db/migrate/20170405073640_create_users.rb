@@ -7,6 +7,7 @@ class CreateUsers < ActiveRecord::Migration[5.0]
       t.citext    :email,           index: { :unique => true }
       t.citext    :username,        index: { :unique => true }
       t.string    :hashed_password
+      t.string    :salt
       t.datetime  :last_seen,       null: false
 
       t.timestamps                  null: false

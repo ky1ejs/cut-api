@@ -63,6 +63,7 @@ ActiveRecord::Schema.define(version: 20170409160922) do
     t.citext   "email"
     t.citext   "username"
     t.string   "hashed_password"
+    t.string   "salt"
     t.datetime "last_seen",       null: false
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false

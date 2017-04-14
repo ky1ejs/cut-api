@@ -7,7 +7,7 @@ RSpec.describe User, :type => :model do
     u = User.new
     u.email = user_with_gravatar
     u.username = "kylejm"
-    u.hashed_password = "test"
+    u.password = "test"
     u.save!
 
     json = u.as_json
@@ -18,17 +18,74 @@ RSpec.describe User, :type => :model do
   end
 
   it "handles case where user does not have gravatar" do
-    user_without_gravatar = "e-m-a-i-l@not_in.use"
+    user_without_gravatar = "e-m-a-i-l@not-in.us"
 
     u = User.new
     u.email = user_without_gravatar
     u.username = "kylejm"
-    u.hashed_password = "test"
+    u.password = "test"
     u.save!
 
     json = u.as_json
 
     expect(json['profile_image']).to eq nil
+
+    u.destroy!
+  end
+
+  it "should encrypt the user's password" do
+    password = "test"
+
+    u = User.new
+    u.email = "test@test.com"
+    u.username = "kylejm"
+    u.password = password
+    u.save!
+
+    expect(u.password).to eq nil
+    expect(u.check_password(password)).to eq true
+
+    u.destroy!
+  end
+
+  it "should be able to save annonymously" do
+    u = User.new
+    u.save!
+
+    expect(u.id).not_to eq nil
+
+    u.destroy!
+  end
+
+  it "should be able to update the last time we saw an annonymous user" do
+    u = User.new
+    u.save!
+
+    expect(u.id).not_to eq nil
+
+    last_seen = Time.now
+    u.last_seen = last_seen
+    u.save!
+
+    expect(u.last_seen).to eq last_seen
+
+    u.destroy!
+  end
+
+  it "should be able to update the last time we saw a full user" do
+    u = User.new
+    u.email = "test@test.com"
+    u.password = "secure"
+    u.username  = "test"
+    u.save!
+
+    expect(u.id).not_to eq nil
+
+    last_seen = Time.now
+    u.last_seen = last_seen
+    u.save!
+
+    expect(u.last_seen).to eq last_seen
 
     u.destroy!
   end

@@ -8,6 +8,9 @@ end
 # For calling other APIs and services
 gem 'httparty'
 
+# For password encryption
+gem 'bcrypt'
+
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.0.2'
 # Use PostgreSQL as the database for Active Record

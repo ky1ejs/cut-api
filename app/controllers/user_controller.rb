@@ -21,7 +21,7 @@ class UserController < ApplicationController
 
     u.username = params[:username]
     u.email = params[:email]
-    u.hashed_password = params[:password]
+    u.password = params[:password]
     u.save!
 
     render json: u
@@ -30,7 +30,7 @@ class UserController < ApplicationController
   def add_device_to_user
     u = User.find_by(email: params[:email])
 
-    if u.hashed_password != params[:password] || u.id == device.user.id
+    if !u.check_password(params[:password]) || u.id == device.user.id
       render status: 422
       return
     end
@@ -63,9 +63,5 @@ class UserController < ApplicationController
     device.user.save!
 
     render status: 200
-  end
-
-  def unfollow_user
-
   end
 end
