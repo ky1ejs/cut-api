@@ -23,7 +23,7 @@ class UserController < ApplicationController
     u.email = params[:email]
     u.hashed_password = params[:password]
     u.save!
-    
+
     render json: u
   end
 
@@ -45,7 +45,7 @@ class UserController < ApplicationController
     render status: 200
   end
 
-  def follow_user
+  def follow_unfollow_user
     username = params[:username]
 
     if username == device.user.username
@@ -53,7 +53,19 @@ class UserController < ApplicationController
       return
     end
 
-    u = User.find_by(username: username)
-    Follow.find_or_create_by(follower: device.user, following: u).save!
+    user = User.find_by(username: username)
+    if request.delete?
+      device.user.following.delete(user)
+    elsif request.post?
+      device.user.following.push(user)
+    end
+
+    device.user.save!
+
+    render status: 200
+  end
+
+  def unfollow_user
+
   end
 end
