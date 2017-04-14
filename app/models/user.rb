@@ -1,3 +1,6 @@
+require 'httparty'
+require 'digest/md5'
+
 class User < ApplicationRecord
   has_many :devices
   has_many :watch_list_records, foreign_key: :user_id, class_name: "WantToWatch"
@@ -17,6 +20,17 @@ class User < ApplicationRecord
 
   def as_json(options = {})
     json = super(options)
+
+    if !self.email.nil?
+      gravatar = "https://www.gravatar.com/avatar/"
+      email_hash = Digest::MD5.hexdigest(self.email)
+      query = '?d=404'
+      profile_image_url = "#{gravatar}#{email_hash}#{query}"
+      response = HTTParty.get profile_image_url
+      json['profile_image'] = profile_image_url if response.code == 200
+    end
+
+
     json['is_full_user'] = is_full_user
     json
   end

@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe User, :type => :model do
+RSpec.describe Device, :type => :model do
   it "saves given UUID" do
     type = :ios
     uuid = "2a2096ff-ed6c-450d-bdb4-98757793fdeb"
