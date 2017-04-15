@@ -5,7 +5,7 @@ RSpec.describe UserController, type: :controller do
     @follower = User.new
     @follower.username = 's-jobs'
     @follower.email = 'steve@apple.com'
-    @follower.password = ""
+    @follower.password = "test"
     @follower.save!
 
     follower_device = Device.new
@@ -18,7 +18,7 @@ RSpec.describe UserController, type: :controller do
     @followee = User.new
     @followee.username = 's-woz'
     @followee.email = 'woz@apple.com'
-    @followee.password = ""
+    @followee.password = "test"
     @followee.save!
   end
 

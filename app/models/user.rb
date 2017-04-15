@@ -11,12 +11,16 @@ class User < ApplicationRecord
   has_many :followers, through: :follower_records
   has_many :following, through: :following_records
 
-  def is_password_set
+  def password_is_set
     !self.password.nil? || (!self.hashed_password.nil? && !self.salt.nil?)
   end
 
+  def full_user_fields
+    [self.email, password_is_set ? "password" : nil, self.username]
+  end
+
   def is_full_user
-    is_password_set && [self.email, self.username].all? { |e| !e.nil?  }
+    full_user_fields.all? { |e| !e.nil?  }
   end
 
   def as_json(options = {})
@@ -55,8 +59,6 @@ class User < ApplicationRecord
 
   protected
 
-  attr_accessor :hashed_password, :salt
-
   def set_initial_last_seen
     self.last_seen ||= Time.now
   end
@@ -76,5 +78,22 @@ class User < ApplicationRecord
 
   def clear_password
     self.password = nil
+  end
+
+  # Protecting access to hashed_password and salt
+  def hashed_password
+    self[:hashed_password]
+  end
+
+  def hashed_password=(hash)
+    write_attribute :hashed_password, hash
+  end
+
+  def salt
+    self[:salt]
+  end
+
+  def salt=(salt)
+    write_attribute :salt, salt
   end
 end
