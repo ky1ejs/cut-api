@@ -7,7 +7,7 @@ RSpec.describe User, :type => :model do
     u = User.new
     u.email = user_with_gravatar
     u.username = "kylejm"
-    u.password = "test"
+    u.password = "Secure12345"
     u.save!
 
     json = u.as_json
@@ -23,7 +23,7 @@ RSpec.describe User, :type => :model do
     u = User.new
     u.email = user_without_gravatar
     u.username = "kylejm"
-    u.password = "test"
+    u.password = "Secure12345"
     u.save!
 
     json = u.as_json
@@ -34,7 +34,7 @@ RSpec.describe User, :type => :model do
   end
 
   it "should encrypt the user's password" do
-    password = "test"
+    password = "Secure12345"
 
     u = User.new
     u.email = "test@test.com"
@@ -75,7 +75,7 @@ RSpec.describe User, :type => :model do
   it "should be able to update the last time we saw a full user" do
     u = User.new
     u.email = "test@test.com"
-    u.password = "secure"
+    u.password = "Secure12345"
     u.username  = "test"
     u.save!
 

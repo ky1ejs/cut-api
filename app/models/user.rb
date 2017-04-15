@@ -52,7 +52,7 @@ class User < ApplicationRecord
   after_save :clear_password
 
   EMAIL_REGEX = /\A[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\z/i
-  validate :validate_full_user
+  validate :validate_password, :validate_full_user
   validates :username, :presence => true, :allow_nil => true, :uniqueness => true
   validates :password, :presence => true, :allow_nil => true
   validates :email, :presence => true, :allow_nil => true, :uniqueness => true, :format => EMAIL_REGEX
@@ -64,9 +64,28 @@ class User < ApplicationRecord
   end
 
   def validate_full_user
-    error_message = "Mandatory full user fields not complete #{full_user_fields}"
+    error_message = "Mandatory full user fields not complete"
     any_fields_not_nil = full_user_fields.any? { |e| !e.nil?  }
     errors.add :base, error_message if any_fields_not_nil && !is_full_user
+  end
+
+  NUMBER_REGEX = /.*[0-9]+.*/
+  UPPER_REGEX = /.*[A-Z]+.*/
+  LOWER_REGEX = /.*[a-z]+.*/
+  def validate_password
+    return if !self.password.present?
+
+    validations = [
+      [NUMBER_REGEX, "Password must contain at least 1 number"],
+      [UPPER_REGEX, "Password must contain at least 1 upper case letter"],
+      [LOWER_REGEX, "Password must contain at least 1 lower case letter"]
+    ]
+
+    validations.each do |regex_and_error_message|
+      errors.add :password, regex_and_error_message[1] if self.password.match(regex_and_error_message[0]).nil?
+    end
+
+    errors.add :password, "Password must be at least 8 characters" if self.password.length < 8
   end
 
   def encrypt_password
