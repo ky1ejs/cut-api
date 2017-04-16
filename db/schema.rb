@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170409160922) do
+ActiveRecord::Schema.define(version: 20170416100749) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -59,6 +59,15 @@ ActiveRecord::Schema.define(version: 20170409160922) do
     t.index ["url"], name: "index_posters_on_url", unique: true, using: :btree
   end
 
+  create_table "ratings", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
+    t.uuid     "user_id",    null: false
+    t.uuid     "film_id",    null: false
+    t.integer  "rating",     null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "film_id"], name: "index_ratings_on_user_id_and_film_id", unique: true, using: :btree
+  end
+
   create_table "users", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.citext   "email"
     t.citext   "username"
@@ -83,6 +92,8 @@ ActiveRecord::Schema.define(version: 20170409160922) do
   add_foreign_key "follows", "users", column: "follower_id", on_delete: :cascade
   add_foreign_key "follows", "users", column: "following_id", on_delete: :cascade
   add_foreign_key "posters", "films", on_delete: :cascade
+  add_foreign_key "ratings", "films", on_delete: :cascade
+  add_foreign_key "ratings", "users", on_delete: :cascade
   add_foreign_key "want_to_watches", "films", on_delete: :cascade
   add_foreign_key "want_to_watches", "users", on_delete: :cascade
 end
