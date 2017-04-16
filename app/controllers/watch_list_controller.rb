@@ -1,6 +1,6 @@
 class WatchListController < ApplicationController
   def index
-    render json: device.user.watch_list.map { |watch| watch.film }
+    render json: device.user.watch_list.as_json(include: :posters)
   end
 
   def add_film_to_watch_list
