@@ -4,6 +4,9 @@ Rails.application.routes.draw do
   scope '/v1' do
     scope '/films' do
       get '/' => 'film#index'
+      scope '/:film_id' do
+        post '/rate' => 'rating#rate_film'
+      end
     end
     scope '/watch-list' do
       get '/' => 'watch_list#index'
@@ -23,6 +26,10 @@ Rails.application.routes.draw do
     end
     scope '/search' do
       get '/' => 'search#search'
+    end
+    scope '/ratings' do
+      get '/' => 'rating#index'
+      post '/' => 'rating#rate_film'
     end
   end
 end
