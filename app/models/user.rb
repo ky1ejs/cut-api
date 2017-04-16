@@ -27,14 +27,14 @@ class User < ApplicationRecord
   def as_json(options = {})
     json = super(options)
 
-    # if !self.email.nil?
-    #   gravatar = "https://www.gravatar.com/avatar/"
-    #   email_hash = Digest::MD5.hexdigest(self.email)
-    #   query = '?d=404'
-    #   profile_image_url = "#{gravatar}#{email_hash}#{query}"
-    #   response = HTTParty.get profile_image_url
-    #   json['profile_image'] = profile_image_url if response.code == 200
-    # end
+    if !self.email.nil?
+      gravatar = "https://www.gravatar.com/avatar/"
+      email_hash = Digest::MD5.hexdigest(self.email)
+      query = '?d=404'
+      profile_image_url = "#{gravatar}#{email_hash}#{query}"
+      response = HTTParty.get profile_image_url
+      json['profile_image'] = profile_image_url if response.code == 200
+    end
 
     json['is_full_user'] = is_full_user
     json
