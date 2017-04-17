@@ -9,8 +9,9 @@ Rails.application.routes.draw do
       end
     end
     scope '/watch-list' do
-      get '/' => 'watch_list#index'
-      post '/' => 'watch_list#add_film_to_watch_list'
+      get '/' => 'want_to_watch#index'
+      post '/' => 'want_to_watch#add_film_to_watch_list'
+      delete '/' => 'want_to_watch#delete_film_from_watch_list'
     end
     scope '/users' do
       get '/' => 'user#get_current_user'
@@ -30,6 +31,7 @@ Rails.application.routes.draw do
     scope '/ratings' do
       get '/' => 'rating#index'
       post '/' => 'rating#rate_film'
+      post '/' => 'rating#delete_rating'
     end
   end
 end

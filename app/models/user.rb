@@ -4,13 +4,20 @@ require 'bcrypt'
 
 class User < ApplicationRecord
   has_many :devices
-  has_many :ratings
-  has_many :watch_list_records, foreign_key: :user_id, class_name: "WantToWatch"
+  has_many :watch_list_records, foreign_key: :user_id, class_name: "Watch"
   has_many :watch_list, through: :watch_list_records, source: :film
   has_many :follower_records, foreign_key: :following_id, class_name: "Follow"
   has_many :following_records, foreign_key: :follower_id, class_name: "Follow"
   has_many :followers, through: :follower_records
   has_many :following, through: :following_records
+
+  def want_to_watch_list
+    self.watch_list_records.select { |r| !r.watched }
+  end
+
+  def rated_list
+    self.watch_list_records.select { |r| r.watched }
+  end
 
   def password_is_set
     !self.password.nil? || (!self.hashed_password.nil? && !self.salt.nil?)
