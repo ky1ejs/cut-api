@@ -7,4 +7,13 @@ class Watch < ApplicationRecord
   def watched
     !self.rating.nil? || !self.comment.nil?
   end
+
+  def as_json(options = {})
+    return super.as_json(options) if !self.watched || options[:include] != :film
+
+    options = nil
+    json = film.as_json(include: :posters)
+    json[:user_rating] = super.as_json
+    return json
+  end
 end
