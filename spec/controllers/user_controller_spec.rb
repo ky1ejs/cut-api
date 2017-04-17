@@ -63,4 +63,49 @@ RSpec.describe UserController, type: :controller do
     expect(@followee.followers.count).to eq 0
     expect(@followee.following.count).to eq 0
   end
+
+  it "should sign up full users" do
+    device = Device.new
+    device.type = :ios
+    device.save
+
+    username = 'test'
+    email = 'test@test.com'
+    password = "Test12345"
+
+    request.headers[:HTTP_DEVICE_ID] = "#{device.type}_#{device.id}"
+    post :create_login, params: {:username => username, :password => password, :email => email}
+
+    expect { User.find_by(username: username) }.not_to raise_error
+
+    user = User.find_by(username: username)
+    expect(user.email).to eq email
+    expect(user.check_password(password)).to eq true
+
+    user.destroy
+  end
+
+  it "should return user's details" do
+    device = Device.new
+    device.type = :ios
+    device.save
+
+    email = 'test@test.com'
+    username = 'test'
+
+    device.user.username = username
+    device.user.email = email
+    device.user.password = "Test12345"
+    device.user.save
+
+    request.headers[:HTTP_DEVICE_ID] = "#{device.type}_#{device.id}"
+    get :get_current_user
+
+    response_json = JSON.parse(response.body)
+
+    expect(response_json['email']).to eq email
+    expect(response_json['username']).to eq username
+
+    device.user.destroy
+  end
 end
