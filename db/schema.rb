@@ -71,7 +71,7 @@ ActiveRecord::Schema.define(version: 20170417120821) do
     t.index ["username"], name: "index_users_on_username", unique: true, using: :btree
   end
 
-  create_table "watches", force: :cascade do |t|
+  create_table "watches", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.uuid     "user_id",    null: false
     t.uuid     "film_id",    null: false
     t.decimal  "rating"

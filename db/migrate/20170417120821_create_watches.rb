@@ -2,7 +2,7 @@ class CreateWatches < ActiveRecord::Migration[5.0]
   def change
     enable_extension 'uuid-ossp'
 
-    create_table :watches do |t|
+    create_table :watches, id: :uuid do |t|
       t.uuid :user_id, null: false
       t.uuid :film_id, null: false
       t.decimal :rating
