@@ -74,7 +74,7 @@ ActiveRecord::Schema.define(version: 20170417120821) do
   create_table "watches", force: :cascade do |t|
     t.uuid     "user_id",    null: false
     t.uuid     "film_id",    null: false
-    t.integer  "rating"
+    t.decimal  "rating"
     t.string   "comment"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

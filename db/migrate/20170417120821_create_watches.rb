@@ -5,7 +5,7 @@ class CreateWatches < ActiveRecord::Migration[5.0]
     create_table :watches do |t|
       t.uuid :user_id, null: false
       t.uuid :film_id, null: false
-      t.integer :rating
+      t.decimal :rating
       t.string :comment
 
       t.timestamps
