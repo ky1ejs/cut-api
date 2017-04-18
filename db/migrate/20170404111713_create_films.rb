@@ -7,8 +7,8 @@ class CreateFilms < ActiveRecord::Migration[5.0]
       t.citext      :title,                      null: false, index: { :unique => true }
       t.datetime    :theater_release_date
       t.integer     :running_time
-      t.float       :rotten_tomatoes_score
-      t.float       :external_user_score
+      t.decimal     :rotten_tomatoes_score
+      t.decimal     :external_user_score
       t.integer     :external_user_score_count
       t.integer     :external_user_want_to_watch_count
       t.string      :synopsis

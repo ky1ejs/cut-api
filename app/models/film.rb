@@ -1,12 +1,11 @@
 class Film < ApplicationRecord
   has_many :ratings
   has_many :posters
-  has_many :providers, foreign_key: :film_id, class_name: "FilmProvider"
+  has_many :providers, class_name: "FilmProvider"
 
-  validates :rotten_tomatoes_score, :external_user_score, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 1 }, allow_nil: true
-  validates :running_time, numericality: { greater_than: 0 }, allow_nil: true
   validates :title, presence: true
-  validates :synopsis, presence: true, allow_nil: true
+  validates :running_time, numericality: { greater_than: 0 }, allow_nil: true
+  validates :rotten_tomatoes_score, :external_user_score, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 1 }, allow_nil: true
 
   def self.from_flixster(json)
     title = json[:title]
@@ -56,6 +55,7 @@ class Film < ApplicationRecord
       :detailed => :large
     }
     posters_json = json[:poster]
+
     f.posters = posters_json.map do |key, value|
       poster = Poster.new
       poster.size = flixster_poster_type_map[key]
