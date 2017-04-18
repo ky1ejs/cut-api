@@ -1,6 +1,7 @@
 class Film < ApplicationRecord
   has_many :ratings
   has_many :posters
+  has_many :providers, foreign_key: :film_id, class_name: "FilmProvider"
 
   validates :rotten_tomatoes_score, :external_user_score, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 1 }, allow_nil: true
   validates :running_time, numericality: { greater_than: 0 }, allow_nil: true
@@ -43,6 +44,11 @@ class Film < ApplicationRecord
     f.external_user_want_to_watch_count = external_user_want_to_watch_count
     f.synopsis = json[:synopsis]
     f.theater_release_date = theater_release_date
+
+    provider = FilmProvider.new
+    provider.provider = :flixster
+    provider.provider_film_id = json[:id].to_s
+    f.providers = [provider]
 
     flixster_poster_type_map = {
       :thumbnail => :thumbnail,

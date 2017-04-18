@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170417120821) do
+ActiveRecord::Schema.define(version: 20170417152059) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -25,6 +25,15 @@ ActiveRecord::Schema.define(version: 20170417120821) do
     t.string   "push_token"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "film_providers", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
+    t.integer  "provider",         null: false
+    t.uuid     "film_id",          null: false
+    t.string   "provider_film_id", null: false
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+    t.index ["provider", "film_id"], name: "index_film_providers_on_provider_and_film_id", unique: true, using: :btree
   end
 
   create_table "films", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
@@ -82,6 +91,7 @@ ActiveRecord::Schema.define(version: 20170417120821) do
   end
 
   add_foreign_key "devices", "users", on_delete: :cascade
+  add_foreign_key "film_providers", "films", on_delete: :cascade
   add_foreign_key "follows", "users", column: "follower_id", on_delete: :cascade
   add_foreign_key "follows", "users", column: "following_id", on_delete: :cascade
   add_foreign_key "posters", "films", on_delete: :cascade
