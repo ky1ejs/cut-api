@@ -5,7 +5,6 @@ class Film < ApplicationRecord
 
   validates :title, presence: true
   validates :running_time, numericality: { greater_than: 0 }, allow_nil: true
-  validates :rotten_tomatoes_score, :external_user_score, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 1 }, allow_nil: true
 
   def self.from_flixster(json)
     title = json[:title]
@@ -19,15 +18,6 @@ class Film < ApplicationRecord
       running_time = hours + running_time_data[:mins].to_i
     end
 
-    r_t_score = json[:reviews][:rottenTomatoes].try(:[], :rating)
-    rotten_tomatoes_score = r_t_score / Float(100) unless r_t_score.nil?
-
-    fx_user_scores = json[:reviews][:flixster]
-    fx_popcorn_score = fx_user_scores[:popcornScore]
-    external_user_score = fx_popcorn_score / Float(100) unless fx_popcorn_score.nil?
-    external_user_score_count = fx_user_scores[:numScores]
-    external_user_want_to_watch_count = fx_user_scores[:numWantToSee]
-
     t_release_date = json[:theaterReleaseDate]
     year = t_release_date[:year].to_i
     month = t_release_date[:month].to_i
@@ -37,10 +27,6 @@ class Film < ApplicationRecord
     f = Film.new
     f.title = title
     f.running_time = running_time
-    f.rotten_tomatoes_score = rotten_tomatoes_score
-    f.external_user_score = external_user_score
-    f.external_user_score_count = external_user_score_count
-    f.external_user_want_to_watch_count = external_user_want_to_watch_count
     f.synopsis = json[:synopsis]
     f.theater_release_date = theater_release_date
 
@@ -62,6 +48,31 @@ class Film < ApplicationRecord
       poster.url = posters_json[key]
       poster
     end
+
+    reviews = json[:reviews]
+
+    ratings = []
+
+    r_t_score = reviews[:rottenTomatoes].try(:[], :rating)
+    if !r_t_score.nil?
+      critic_review_count = reviews[:criticsNumReviews]
+      rotten_toms_rating = Rating.new
+      rotten_toms_rating.rating = r_t_score / Float(100)
+      rotten_toms_rating.rating_count = critic_review_count
+      rotten_toms_rating.source = :rotten_tomatoes
+      ratings.push(rotten_toms_rating)
+    end
+
+    fx_user_scores = reviews[:flixster]
+    if !fx_user_scores.nil?
+      fx_user_rating = Rating.new
+      fx_user_rating.rating = fx_user_scores[:popcornScore] / Float(100)
+      fx_user_rating.rating_count = fx_user_scores[:numScores]
+      fx_user_rating.source = :flixster_users
+      ratings.push(fx_user_rating)
+    end
+
+    f.ratings = ratings
 
     return f
   end

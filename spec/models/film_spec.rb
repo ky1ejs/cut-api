@@ -9,10 +9,12 @@ RSpec.describe Film, :type => :model do
     poster_url = "http://poster.com/image.jpg"
     poster_size = 'thumbnail'
     synopsis = "Best movie ever"
-    flixster_want_to_see = 9818
+
     flixster_num_of_scores = 1134
     flxster_user_score = 63
+
     rotten_tomatoes_score = 50
+    critic_review_count = 1231
 
     json = {
       "id": 771382349,
@@ -57,27 +59,40 @@ RSpec.describe Film, :type => :model do
       "reviews": {
         "flixster": {
           "numScores": flixster_num_of_scores,
-          "numWantToSee": flixster_want_to_see,
+          "numWantToSee": 9818,
           "popcornScore": flxster_user_score
         },
         "rottenTomatoes": {
-          "rating": 50,
+          "rating": rotten_tomatoes_score,
           "certifiedFresh": false
-        }
+        },
+        "criticsNumReviews": critic_review_count
       }
     }.symbolize_keys
 
 
     f = Film.from_flixster(json)
+    f.save
+
     expect(f.title).to eq title
     expect(f.running_time).to eq running_time
     expect(f.theater_release_date).to eq theater_release_date
     expect(f.posters.first.url).to eq poster_url
     expect(f.posters.first.size).to eq poster_size
     expect(f.synopsis).to eq synopsis
-    expect(f.external_user_want_to_watch_count).to eq flixster_want_to_see
-    expect(f.external_user_score_count).to eq flixster_num_of_scores
-    expect(f.external_user_score).to eq flxster_user_score / Float(100)
-    expect(f.rotten_tomatoes_score).to eq rotten_tomatoes_score / Float(100)
+
+    expect(f.ratings.count).to eq 2
+
+    expect(f.ratings[0].rating).to eq rotten_tomatoes_score / Float(100)
+    expect(f.ratings[0].rating_count).to eq critic_review_count
+    expect(f.ratings[0].source).to eq :rotten_tomatoes.to_s
+
+    expect(f.ratings[1].rating).to eq flxster_user_score / Float(100)
+    expect(f.ratings[1].rating_count).to eq flixster_num_of_scores
+    expect(f.ratings[1].source).to eq :flixster_users.to_s
+
+    f.destroy
+
+    expect(f.ratings.count).to eq 0
   end
 end

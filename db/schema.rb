@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170417152059) do
+ActiveRecord::Schema.define(version: 20170419182513) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -37,16 +37,12 @@ ActiveRecord::Schema.define(version: 20170417152059) do
   end
 
   create_table "films", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
-    t.citext   "title",                             null: false
+    t.citext   "title",                null: false
     t.datetime "theater_release_date"
     t.integer  "running_time"
-    t.decimal  "rotten_tomatoes_score"
-    t.decimal  "external_user_score"
-    t.integer  "external_user_score_count"
-    t.integer  "external_user_want_to_watch_count"
     t.string   "synopsis"
-    t.datetime "created_at",                        null: false
-    t.datetime "updated_at",                        null: false
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
     t.index ["title"], name: "index_films_on_title", unique: true, using: :btree
   end
 
@@ -68,6 +64,16 @@ ActiveRecord::Schema.define(version: 20170417152059) do
     t.index ["url"], name: "index_posters_on_url", unique: true, using: :btree
   end
 
+  create_table "ratings", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
+    t.uuid     "film_id",      null: false
+    t.float    "rating",       null: false
+    t.integer  "rating_count", null: false
+    t.integer  "source",       null: false
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.index ["source", "film_id"], name: "index_ratings_on_source_and_film_id", unique: true, using: :btree
+  end
+
   create_table "users", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.citext   "email"
     t.citext   "username"
@@ -83,7 +89,7 @@ ActiveRecord::Schema.define(version: 20170417152059) do
   create_table "watches", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.uuid     "user_id",    null: false
     t.uuid     "film_id",    null: false
-    t.decimal  "rating"
+    t.float    "rating"
     t.string   "comment"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -95,6 +101,7 @@ ActiveRecord::Schema.define(version: 20170417152059) do
   add_foreign_key "follows", "users", column: "follower_id", on_delete: :cascade
   add_foreign_key "follows", "users", column: "following_id", on_delete: :cascade
   add_foreign_key "posters", "films", on_delete: :cascade
+  add_foreign_key "ratings", "films", on_delete: :cascade
   add_foreign_key "watches", "films", on_delete: :cascade
   add_foreign_key "watches", "users", on_delete: :cascade
 end
