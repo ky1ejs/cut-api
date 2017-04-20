@@ -67,7 +67,7 @@ ActiveRecord::Schema.define(version: 20170419182513) do
   create_table "ratings", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.uuid     "film_id",      null: false
     t.float    "rating",       null: false
-    t.integer  "rating_count", null: false
+    t.integer  "rating_count"
     t.integer  "source",       null: false
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
