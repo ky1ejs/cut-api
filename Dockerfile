@@ -1,19 +1,27 @@
 FROM ruby:2.3.0
 
-RUN apt-get update -qq && apt-get install -y build-essential libpq-dev
-RUN apt-get update && apt-get install -y postgresql-client --no-install-recommends && rm -rf /var/lib/apt/lists/*
+# update apt-get
+RUN apt-get update -qq
+
+# for postgres
+RUN apt-get install -y build-essential libpq-dev
+
+# for nokogiri
+RUN apt-get install -y libxml2-dev libxslt1-dev
 
 # throw errors if Gemfile has been modified since Gemfile.lock
 RUN bundle config --global frozen 1
 
-RUN mkdir -p /cut-api
-WORKDIR /cut-api
+ENV APP_HOME /cut-api
+RUN mkdir $APP_HOME
+WORKDIR $APP_HOME
 
-ONBUILD COPY Gemfile /cut-api/Gemfile
-ONBUILD COPY Gemfile.lock /cut-api/Gemfile.lock
-ONBUILD RUN bundle install
+ADD Gemfile $APP_HOME
+ADD Gemfile.lock $APP_HOME
+RUN gem install bundler
+RUN bundle install
 
-ONBUILD COPY . /cut-api
+ADD . $APP_HOME
 
 EXPOSE 3000
-CMD ["bundle", "evex", cut-api/bin/rails", "server", "-b", "0.0.0.0"]
+CMD ["bundle", "exec", "rails", "server", "-p", "3000", "-b", "0.0.0.0"]
