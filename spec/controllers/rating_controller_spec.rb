@@ -6,7 +6,7 @@ RSpec.describe RatingController, type: :controller do
     @film.save
 
     @device = Device.new
-    @device.type = :ios
+    @device.platform = :ios
     @device.save
   end
 
@@ -24,14 +24,14 @@ RSpec.describe RatingController, type: :controller do
 
     expected_json = [ watch.as_json(include: :film) ].to_json
 
-    request.headers[:HTTP_DEVICE_ID] = "#{@device.type}_#{@device.id}"
+    request.headers[:HTTP_DEVICE_ID] = "#{@device.platform}_#{@device.id}"
     get :index
 
     expect(response.body).to eq expected_json
   end
 
   it "should rate films" do
-    request.headers[:HTTP_DEVICE_ID] = "#{@device.type}_#{@device.id}"
+    request.headers[:HTTP_DEVICE_ID] = "#{@device.platform}_#{@device.id}"
     post :rate_film, params: {:film_id => @film.id, :rating => 5}
 
     expect(@device.user.rated_list.count).to eq 1
@@ -50,7 +50,7 @@ RSpec.describe RatingController, type: :controller do
     expect(@device.user.rated_list.count).to eq 1
     expect(@device.user.watch_list.count).to eq 1
 
-    request.headers[:HTTP_DEVICE_ID] = "#{@device.type}_#{@device.id}"
+    request.headers[:HTTP_DEVICE_ID] = "#{@device.platform}_#{@device.id}"
     delete :delete_rating, params: { :film_id => @film.id }
 
     @device.reload

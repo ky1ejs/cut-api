@@ -20,7 +20,7 @@ ActiveRecord::Schema.define(version: 20170419182513) do
   create_table "devices", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.uuid     "user_id",    null: false
     t.citext   "name"
-    t.integer  "type",       null: false
+    t.integer  "platform",   null: false
     t.datetime "last_seen",  null: false
     t.string   "push_token"
     t.datetime "created_at", null: false

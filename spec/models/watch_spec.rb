@@ -6,7 +6,7 @@ RSpec.describe Watch, type: :model do
     @film.save
 
     @device = Device.new
-    @device.type = :ios
+    @device.platform = :ios
     @device.save
   end
 

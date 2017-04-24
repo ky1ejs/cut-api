@@ -9,11 +9,11 @@ RSpec.describe UserController, type: :controller do
     @follower.save!
 
     follower_device = Device.new
-    follower_device.type = :ios
+    follower_device.platform = :ios
     follower_device.user = @follower
     follower_device.save!
 
-    @device_id = "#{follower_device.type}_#{follower_device.id}"
+    @device_id = "#{follower_device.platform}_#{follower_device.id}"
 
     @followee = User.new
     @followee.username = 's-woz'
@@ -66,14 +66,14 @@ RSpec.describe UserController, type: :controller do
 
   it "should sign up full users" do
     device = Device.new
-    device.type = :ios
+    device.platform = :ios
     device.save
 
     username = 'test'
     email = 'test@test.com'
     password = "Test12345"
 
-    request.headers[:HTTP_DEVICE_ID] = "#{device.type}_#{device.id}"
+    request.headers[:HTTP_DEVICE_ID] = "#{device.platform}_#{device.id}"
     post :create_login, params: {:username => username, :password => password, :email => email}
 
     expect { User.find_by(username: username) }.not_to raise_error
@@ -87,7 +87,7 @@ RSpec.describe UserController, type: :controller do
 
   it "should return user's details" do
     device = Device.new
-    device.type = :ios
+    device.platform = :ios
     device.save
 
     email = 'test@test.com'
@@ -98,7 +98,7 @@ RSpec.describe UserController, type: :controller do
     device.user.password = "Test12345"
     device.user.save
 
-    request.headers[:HTTP_DEVICE_ID] = "#{device.type}_#{device.id}"
+    request.headers[:HTTP_DEVICE_ID] = "#{device.platform}_#{device.id}"
     get :get_current_user
 
     response_json = JSON.parse(response.body)

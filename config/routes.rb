@@ -2,6 +2,12 @@ Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 
   scope '/v1' do
+    scope '/devices' do
+      scope '/token' do
+        post '/' => 'device#set_push_token'
+        delete '/' => 'device#remove_push_token'
+      end
+    end
     scope '/films' do
       get '/' => 'film#index'
       scope '/:film_id' do

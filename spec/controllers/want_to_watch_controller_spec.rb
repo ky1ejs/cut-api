@@ -6,7 +6,7 @@ RSpec.describe WantToWatchController, type: :controller do
     @film.save
 
     @device = Device.new
-    @device.type = :ios
+    @device.platform = :ios
     @device.save
   end
 
@@ -23,14 +23,14 @@ RSpec.describe WantToWatchController, type: :controller do
 
     expected_json = [ watch.film.as_json(include: :posters) ].to_json
 
-    request.headers[:HTTP_DEVICE_ID] = "#{@device.type}_#{@device.id}"
+    request.headers[:HTTP_DEVICE_ID] = "#{@device.platform}_#{@device.id}"
     get :index
 
     expect(response.body).to eq expected_json
   end
 
   it "should add films to the watch list" do
-    request.headers[:HTTP_DEVICE_ID] = "#{@device.type}_#{@device.id}"
+    request.headers[:HTTP_DEVICE_ID] = "#{@device.platform}_#{@device.id}"
     post :add_film_to_watch_list, params: {:film_id => @film.id}
 
     expect(@device.user.rated_list.count).to eq 0
@@ -47,7 +47,7 @@ RSpec.describe WantToWatchController, type: :controller do
     expect(@device.user.want_to_watch_list.count).to eq 1
     expect(@device.user.watch_list.count).to eq 1
 
-    request.headers[:HTTP_DEVICE_ID] = "#{@device.type}_#{@device.id}"
+    request.headers[:HTTP_DEVICE_ID] = "#{@device.platform}_#{@device.id}"
     delete :delete_film_from_watch_list, params: { :film_id => @film.id }
 
     @device.reload
