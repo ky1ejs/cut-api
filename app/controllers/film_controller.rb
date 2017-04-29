@@ -19,7 +19,7 @@ class FilmController < ApplicationController
         all_films_json[i]['user_rating'] = ratings_by_film_id[film_id]
       end
 
-      i +=1
+      i += 1
     end
 
     render json: all_films_json
