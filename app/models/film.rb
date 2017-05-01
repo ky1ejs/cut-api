@@ -77,6 +77,61 @@ class Film < ApplicationRecord
     return f
   end
 
+  def update_with_flixster_json(json)
+
+    f = Film.from_flixster json
+
+    self.title                = f.title
+    self.running_time         = f.running_time
+    self.theater_release_date = f.theater_release_date
+    self.synopsis             = f.synopsis
+
+    updated_posters_by_size = {}
+    f.posters.each do |poster|
+      updated_posters_by_size[poster.size] = poster
+    end
+    if !self.posters.nil?
+      removed_posters = []
+      self.posters.each do |poster|
+        # Remove deleted posters
+        if !updated_poster.keys.include? poster.size
+          removed_posters.push poster
+          next
+        end
+
+        poster.url = updated_posters_by_size[poster.size].url
+        updated_posters_by_size.delete poster.size
+      end
+      self.posters -= removed_posters
+      self.posters += updated_posters_by_size.values
+    else
+      self.posters = f.posters
+    end
+
+    updated_ratings_by_source = {}
+    f.ratings.each do |r|
+      updated_ratings_by_source[r.source] = r
+    end
+    if !self.ratings.nil?
+      removed_ratings = []
+      self.ratings.each do |r|
+        if !updated_ratings_by_source.keys.include? r.source
+          removed_ratings.push r
+          next
+        end
+
+        updated_rating = updated_ratings_by_source[r.source]
+        r.rating = updated_rating.rating
+        r.rating_count = updated_rating.rating_count
+        updated_ratings_by_source.delete r.source
+      end
+      self.ratings -= removed_ratings # Remove deleted ratings
+      self.ratings += updated_ratings_by_source.values # Add new ratings
+    else
+      self.ratings = f.ratings
+    end
+  end
+
   def as_json(options = {})
     json = super(options)
     if options[:include] == :posters
