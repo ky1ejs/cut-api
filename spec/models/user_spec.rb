@@ -2,58 +2,26 @@ require "rails_helper"
 
 RSpec.describe User, :type => :model do
   it "finds profile images on Gravatar" do
-    user_with_gravatar = "kylejmcalpine@gmail.com"
-
-    u = User.new
-    u.email = user_with_gravatar
-    u.username = "kylejm"
-    u.password = "Secure12345"
-    u.save!
-
-    json = u.as_json
-
-    expect(json['profile_image']).to eq 'https://www.gravatar.com/avatar/b194dda96ad4d556c81977b2c1d10a9f?d=404'
-
-    u.destroy!
+    u = create(:full_user, email: "kylejmcalpine@gmail.com")
+    expect(u.as_json['profile_image']).to eq 'https://www.gravatar.com/avatar/b194dda96ad4d556c81977b2c1d10a9f?d=404'
   end
 
   it "handles case where user does not have gravatar" do
-    user_without_gravatar = "e-m-a-i-l@not-in.us"
-
-    u = User.new
-    u.email = user_without_gravatar
-    u.username = "kylejm"
-    u.password = "Secure12345"
-    u.save!
-
-    json = u.as_json
-
-    expect(json['profile_image']).to eq nil
-
-    u.destroy!
+    u = create(:full_user, email: "e-m-a-i-l@not-in.us")
+    expect(u.as_json['profile_image']).to eq nil
   end
 
   it "should encrypt the user's password" do
     password = "Secure12345"
-
-    u = User.new
-    u.email = "test@test.com"
-    u.username = "kylejm"
-    u.password = password
-    u.save!
-
+    u = create(:full_user, password: password)
     expect(u.password).to eq nil
     expect(u.check_password(password)).to eq true
-
-    u.destroy!
   end
 
   it "should be able to save annonymously" do
     u = User.new
     u.save!
-
     expect(u.id).not_to eq nil
-
     u.destroy!
   end
 
@@ -73,12 +41,8 @@ RSpec.describe User, :type => :model do
   end
 
   it "should be able to update the last time we saw a full user" do
-    u = User.new
-    u.email = "test@test.com"
-    u.password = "Secure12345"
-    u.username  = "test"
-    u.save!
-
+    u = create(:full_user)
+    
     expect(u.id).not_to eq nil
 
     last_seen = Time.now
