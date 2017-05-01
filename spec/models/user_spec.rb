@@ -2,12 +2,22 @@ require "rails_helper"
 
 RSpec.describe User, :type => :model do
   it "finds profile images on Gravatar" do
-    u = create(:full_user, email: "kylejmcalpine@gmail.com")
-    expect(u.as_json['profile_image']).to eq 'https://www.gravatar.com/avatar/b194dda96ad4d556c81977b2c1d10a9f?d=404'
+    u = create(:full_user)
+    hashed_email = Digest::MD5.hexdigest(u.email)
+    gravatar_url = "https://www.gravatar.com/avatar/#{hashed_email}?d=404"
+
+    stub_request(:get, gravatar_url).to_return(status: 200)
+
+    expect(u.as_json['profile_image']).to eq gravatar_url
   end
 
   it "handles case where user does not have gravatar" do
-    u = create(:full_user, email: "e-m-a-i-l@not-in.us")
+    u = create(:full_user)
+    hashed_email = Digest::MD5.hexdigest(u.email)
+    gravatar_url = "https://www.gravatar.com/avatar/#{hashed_email}?d=404"
+
+    stub_request(:get, gravatar_url).to_return(status: 404)
+
     expect(u.as_json['profile_image']).to eq nil
   end
 
@@ -42,7 +52,7 @@ RSpec.describe User, :type => :model do
 
   it "should be able to update the last time we saw a full user" do
     u = create(:full_user)
-    
+
     expect(u.id).not_to eq nil
 
     last_seen = Time.now
