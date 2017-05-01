@@ -32,6 +32,7 @@ class User < ApplicationRecord
   end
 
   def as_json(options = {})
+    options[:exclude] = [:hashed_password, :salt, :password]
     json = super(options)
 
     if !self.email.nil?

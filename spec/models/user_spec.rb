@@ -53,4 +53,16 @@ RSpec.describe User, :type => :model do
 
     u.destroy!
   end
+
+  it "should never return the users password in json" do
+    u = create(:full_user)
+    hashed_email = Digest::MD5.hexdigest(u.email)
+    gravatar_url = "https://www.gravatar.com/avatar/#{hashed_email}?d=404"
+    stub_request(:get, gravatar_url).to_return(status: 404)
+
+    json = u.as_json
+    expect(json[:hashed_password]).to eq nil
+    expect(json[:salt]).to eq nil
+    expect(json[:password]).to eq nil
+  end
 end
