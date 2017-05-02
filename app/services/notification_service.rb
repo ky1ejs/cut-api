@@ -1,7 +1,7 @@
 class NotificationService
   def self.publish(message)
     exchange = channel.fanout('notification.exchange', durable: true)
-    exchange.publish({'message' => message}.to_json)
+    exchange.publish({'message' => message, 'is_dev_token' => true}.to_json)
   end
 
   def self.channel
