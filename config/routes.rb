@@ -39,5 +39,8 @@ Rails.application.routes.draw do
       post '/' => 'rating#rate_film'
       post '/' => 'rating#delete_rating'
     end
+    scope '/notification' do
+      get '/' => 'notification#test'
+    end
   end
 end

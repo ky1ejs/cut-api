@@ -11,6 +11,9 @@ gem 'httparty'
 # For password encryption
 gem 'bcrypt'
 
+# RabbitMQ
+gem 'bunny'
+
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.0.2'
 # Use PostgreSQL as the database for Active Record
