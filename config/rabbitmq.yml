@@ -1,0 +1,15 @@
+defaults: &defaults
+  user: guest
+  password: guest
+  host: localhost
+
+development:
+  <<: *defaults
+
+test:
+  <<: *defaults
+
+production:
+  user: <%= ENV['RABBITMQ_USER'] %>
+  password: <%= ENV['RABBITMQ_PASS'] %>
+  host: <%= ENV['RABBITMQ_HOST'] %>
