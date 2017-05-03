@@ -1,5 +1,7 @@
 class NotificationService
   def self.publish(message, device)
+    return if device.push_token.nil?
+    
     payload = {
       'message' => message,
       'is_dev_token' => device.is_dev_device,
