@@ -71,8 +71,8 @@ RSpec.describe User, :type => :model do
     stub_request(:get, gravatar_url).to_return(status: 404)
 
     json = u.as_json
-    expect(json[:hashed_password]).to eq nil
-    expect(json[:salt]).to eq nil
-    expect(json[:password]).to eq nil
+    expect(json.keys.include? 'hashed_password').to eq false
+    expect(json.keys.include? 'salt').to eq false
+    expect(json.keys.include? 'password').to eq false
   end
 end
