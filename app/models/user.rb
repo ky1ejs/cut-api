@@ -40,7 +40,10 @@ class User < ApplicationRecord
       email_hash = Digest::MD5.hexdigest(self.email)
       query = '?d=404'
       profile_image_url = "#{gravatar}#{email_hash}#{query}"
-      response = HTTParty.get profile_image_url
+      begin
+        response = HTTParty.get profile_image_url
+      rescue
+      end
       json['profile_image'] = profile_image_url if response.code == 200
     end
 
