@@ -44,7 +44,8 @@ class User < ApplicationRecord
         response = HTTParty.get profile_image_url
       rescue
       end
-      json['profile_image'] = profile_image_url if response.code == 200
+
+      json['profile_image'] = profile_image_url if response != nil && response.code == 200
     end
 
     json['is_full_user'] = is_full_user
