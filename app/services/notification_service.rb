@@ -20,7 +20,7 @@ class NotificationService
 
   def self.connection
     @connection ||= Bunny.new({
-      :host      => RABBIT_CONFIG['host'].strip,
+      :host      => RABBIT_CONFIG['host'],
       :port      => 5672,
       :ssl       => false,
       :vhost     => "/",
