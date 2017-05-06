@@ -1,9 +1,6 @@
 class ApplicationController < ActionController::API
   def device
     regex = /^(?<platform>[a-z]*)_(?<id>[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})$/i
-    request.headers.each do |k, v|
-      Rails.logger.debug "#{k} - #{v}"
-    end
     device_id = request.headers[:HTTP_DEVICE_ID].match regex
 
     is_dev_device = request.headers[:HTTP_IS_DEV_DEVICE]
