@@ -75,4 +75,19 @@ RSpec.describe User, :type => :model do
     expect(json.keys.include? 'salt').to eq false
     expect(json.keys.include? 'password').to eq false
   end
+
+  it "serialises how following and followers count" do
+    u = create(:full_user)
+
+    (0..2).each do
+      user = create(:full_user)
+      u.followers.push user
+      u.following.push user
+    end
+
+    json = u.as_json
+
+    expect(json['following_count']).to eq 3
+    expect(json['follower_count']).to eq 3
+  end
 end

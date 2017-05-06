@@ -49,6 +49,9 @@ class User < ApplicationRecord
     end
 
     json['is_full_user'] = is_full_user
+    json['follower_count'] = self.followers.count
+    json['following_count'] = self.following.count
+
     json
   end
 
