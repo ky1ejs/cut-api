@@ -19,14 +19,13 @@ class NotificationService
   end
 
   def self.connection
-    @connection ||= Bunny.new(
-    {
-      :host      => RABBIT_CONFIG[:host],
+    @connection ||= Bunny.new({
+      :host      => RABBIT_CONFIG['host'].strip,
       :port      => 5672,
       :ssl       => false,
       :vhost     => "/",
-      :user      => RABBIT_CONFIG[:user],
-      :pass      => RABBIT_CONFIG[:password],
+      :user      => RABBIT_CONFIG['user'],
+      :pass      => RABBIT_CONFIG['password'],
       :heartbeat => :server, # will use RabbitMQ setting
       :frame_max => 131072,
       :auth_mechanism => "PLAIN"
