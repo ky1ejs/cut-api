@@ -19,6 +19,6 @@ describe 'Whenever Schedule' do
 
     expect(schedule.jobs[:rake].first[:task]).to eq 'films:fetch_flixster'
     expect(schedule.jobs[:rake].first[:command]).to eq "cd :path && :environment_variable=:environment :bundle_command rake :task --silent :output"
-    expect(schedule.jobs[:rake].first[:every]).to eq [3.hours]
+    expect(schedule.jobs[:rake].first[:every]).to eq [2.hours]
   end
 end
