@@ -9,6 +9,9 @@ RUN apt-get install -y build-essential libpq-dev
 # for nokogiri
 RUN apt-get install -y libxml2-dev libxslt1-dev
 
+# for whenever
+RUN apt-get -y install cron
+
 # throw errors if Gemfile has been modified since Gemfile.lock
 RUN bundle config --global frozen 1
 
@@ -23,7 +26,5 @@ RUN bundle install
 
 ADD . $APP_HOME
 
-RUN bundle exec whenever --update-crontab
-
-EXPOSE 3000
-CMD ["bundle", "exec", "rails", "server", "-p", "3000", "-b", "0.0.0.0"]
+# Running whenever at CMD time, otherwise it won't get most up to date ENV vars
+CMD bundle exec whenever -w && cron && bundle exec rails server -p 3000 -b 0.0.0.0
