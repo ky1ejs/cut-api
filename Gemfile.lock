@@ -193,6 +193,8 @@ GEM
     websocket-extensions (0.1.2)
     whenever (0.9.7)
       chronic (>= 0.6.3)
+    whenever-test (1.0.1)
+      whenever
 
 PLATFORMS
   ruby
@@ -216,6 +218,7 @@ DEPENDENCIES
   tzinfo-data
   webmock
   whenever
+  whenever-test
 
 BUNDLED WITH
    1.14.6

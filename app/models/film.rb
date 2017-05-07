@@ -94,7 +94,7 @@ class Film < ApplicationRecord
       removed_posters = []
       self.posters.each do |poster|
         # Remove deleted posters
-        if !updated_poster.keys.include? poster.size
+        if !updated_posters_by_size.keys.include? poster.size
           removed_posters.push poster
           next
         end

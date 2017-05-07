@@ -46,6 +46,8 @@ group :development, :test do
   gem "factory_girl_rails", "~> 4.0"
 
   gem "webmock"
+
+  gem 'whenever-test'
 end
 
 group :development do
