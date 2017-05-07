@@ -23,5 +23,7 @@ RUN bundle install
 
 ADD . $APP_HOME
 
+RUN bundle exec whenever --update-crontab
+
 EXPOSE 3000
 CMD ["bundle", "exec", "rails", "server", "-p", "3000", "-b", "0.0.0.0"]
