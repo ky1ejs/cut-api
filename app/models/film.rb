@@ -133,12 +133,11 @@ class Film < ApplicationRecord
   end
 
   def as_json(options = {})
+    options[:include] ||= [:ratings, :posters]
     json = super(options)
-    if options[:include] == :posters
-      posters = {}
-      json['posters'].each { |poster| posters[poster['size']] = poster }
-      json['posters'] = posters
-    end
+    posters = {}
+    json['posters'].each { |poster| posters[poster['size']] = poster }
+    json['posters'] = posters
     json
   end
 end

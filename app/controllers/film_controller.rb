@@ -1,7 +1,7 @@
 class FilmController < ApplicationController
   def index
     want_to_watch_ids = device.user.want_to_watch_list.map { |film| film.id }
-    all_films_json = Film.all.as_json(include: :posters)
+    all_films_json = Film.all.as_json
 
     ratings_by_film_id = {}
     device.user.rated_list.each { |r| ratings_by_film_id[r.film_id] = r }
