@@ -45,12 +45,12 @@ RSpec.describe Film, :type => :model do
 
     expect(f.ratings.count).to eq 2
 
-    expect(f.ratings[0].rating).to eq rotten_tomatoes_score / Float(100)
-    expect(f.ratings[0].rating_count).to eq nil
+    expect(f.ratings[0].score).to eq rotten_tomatoes_score / Float(100)
+    expect(f.ratings[0].count).to eq nil
     expect(f.ratings[0].source).to eq :rotten_tomatoes.to_s
 
-    expect(f.ratings[1].rating).to eq flxster_user_score / Float(100)
-    expect(f.ratings[1].rating_count).to eq flixster_num_of_scores
+    expect(f.ratings[1].score).to eq flxster_user_score / Float(100)
+    expect(f.ratings[1].count).to eq flixster_num_of_scores
     expect(f.ratings[1].source).to eq :flixster_users.to_s
 
     f.destroy
@@ -103,12 +103,12 @@ RSpec.describe Film, :type => :model do
 
     expect(f.ratings.count).to eq 2
 
-    expect(f.ratings[0].rating).to eq rotten_tomatoes_score / Float(100)
-    expect(f.ratings[0].rating_count).to eq nil
+    expect(f.ratings[0].score).to eq rotten_tomatoes_score / Float(100)
+    expect(f.ratings[0].count).to eq nil
     expect(f.ratings[0].source).to eq :rotten_tomatoes.to_s
 
-    expect(f.ratings[1].rating).to eq flxster_user_score / Float(100)
-    expect(f.ratings[1].rating_count).to eq flixster_num_of_scores
+    expect(f.ratings[1].score).to eq flxster_user_score / Float(100)
+    expect(f.ratings[1].count).to eq flixster_num_of_scores
     expect(f.ratings[1].source).to eq :flixster_users.to_s
 
     f.destroy!

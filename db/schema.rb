@@ -66,12 +66,12 @@ ActiveRecord::Schema.define(version: 20170419182513) do
   end
 
   create_table "ratings", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
-    t.uuid     "film_id",      null: false
-    t.float    "rating",       null: false
-    t.integer  "rating_count"
-    t.integer  "source",       null: false
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.uuid     "film_id",    null: false
+    t.float    "score",      null: false
+    t.integer  "count"
+    t.integer  "source",     null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["source", "film_id"], name: "index_ratings_on_source_and_film_id", unique: true, using: :btree
   end
 

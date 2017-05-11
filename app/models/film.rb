@@ -57,8 +57,8 @@ class Film < ApplicationRecord
     if !r_t_score.nil?
       critic_review_count = reviews[:criticsNumReviews]
       rotten_toms_rating = Rating.new
-      rotten_toms_rating.rating = r_t_score / Float(100)
-      rotten_toms_rating.rating_count = critic_review_count
+      rotten_toms_rating.score = r_t_score / Float(100)
+      rotten_toms_rating.count = critic_review_count
       rotten_toms_rating.source = :rotten_tomatoes
       ratings.push(rotten_toms_rating)
     end
@@ -66,8 +66,8 @@ class Film < ApplicationRecord
     fx_user_scores = reviews[:flixster]
     if !fx_user_scores.nil?
       fx_user_rating = Rating.new
-      fx_user_rating.rating = fx_user_scores[:popcornScore] / Float(100)
-      fx_user_rating.rating_count = fx_user_scores[:numScores]
+      fx_user_rating.score = fx_user_scores[:popcornScore] / Float(100)
+      fx_user_rating.count = fx_user_scores[:numScores]
       fx_user_rating.source = :flixster_users
       ratings.push(fx_user_rating)
     end
@@ -121,8 +121,8 @@ class Film < ApplicationRecord
         end
 
         updated_rating = updated_ratings_by_source[r.source]
-        r.rating = updated_rating.rating
-        r.rating_count = updated_rating.rating_count
+        r.score = updated_rating.score
+        r.count = updated_rating.count
         updated_ratings_by_source.delete r.source
       end
       self.ratings -= removed_ratings # Remove deleted ratings

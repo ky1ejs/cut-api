@@ -4,8 +4,8 @@ class CreateRatings < ActiveRecord::Migration[5.0]
 
     create_table :ratings, id: :uuid do |t|
       t.uuid    :film_id,       null: false
-      t.float   :rating,        null: false
-      t.integer :rating_count
+      t.float   :score,         null: false
+      t.integer :count
       t.integer :source,        null: false
 
       t.timestamps              null: false
