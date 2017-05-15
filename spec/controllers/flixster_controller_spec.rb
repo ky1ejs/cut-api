@@ -18,7 +18,7 @@ RSpec.describe FlixsterController, :type => :controller do
 
     rotten_tomatoes_score = 50
 
-    json_hash = [create(:flixster_film_json,
+    json = create(:flixster_film_json,
       id: provider_film_id,
       title: title,
       runningTime: running_time_description,
@@ -33,10 +33,13 @@ RSpec.describe FlixsterController, :type => :controller do
       user_score_count: flixster_num_of_scores,
       user_score: flxster_user_score,
       rotten_tomatoes_score: rotten_tomatoes_score
-    )]
+    )
 
-    url_regex = Regexp.new FlixsterController.url
-    stub_request(:get, url_regex).to_return(status: 200, body: json_hash.to_json)
+    movies_url_regex = Regexp.new FlixsterController.movies_url
+    stub_request(:get, movies_url_regex).to_return(status: 200, body: [json].to_json)
+
+    film_url_regex = Regexp.new "#{FlixsterController.movies_url}/#{provider_film_id}.json"
+    stub_request(:get, film_url_regex).to_return(status: 200, body: json.to_json)
 
     FlixsterController.new.fetch_popular
 
