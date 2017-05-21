@@ -113,11 +113,22 @@ class Film < ApplicationRecord
   end
 
   def as_json(options = {})
-    options[:include] ||= [:ratings, :posters]
+    options[:include] ||= [:ratings]
     json = super(options)
-    posters = {}
-    json['posters'].each { |poster| posters[poster['size']] = poster }
-    json['posters'] = posters
+
+    posters = self.posters.group_by { |poster| poster.size_index }
+    posters = posters.map { |k, v| v.sort_by { |poster| poster.short_side_length } }
+    posters = posters.map { |g| g.last } # get the biggest for each size group
+
+    size_sorted_posters = self.posters.sort_by { |poster| poster.short_side_length }
+    smallest_poster = size_sorted_posters.first
+    largest_poster = size_sorted_posters.last
+
+    poster_json = {}
+    posters.each { |poster| poster_json[poster.size_name] = poster.as_json }
+    poster_json['smallest'] = smallest_poster
+    poster_json['largest'] = largest_poster
+    json['posters'] = poster_json
     json
   end
 end
