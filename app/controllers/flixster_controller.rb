@@ -55,16 +55,23 @@ class FlixsterController < ApplicationController
 
     provider = FilmProvider.find_by(provider_film_id: id, provider: :flixster)
     if provider.nil?
-      film = Film.from_flixster json
-    else
-      film = provider.film
-      film.update_with_flixster_json json
-    end
 
-    begin
-      film.save!
-    rescue => exception
-      puts exception
+      film = Film.from_flixster json
+      begin
+        film.save!
+      rescue => exception
+        puts exception
+      end
+
+    else
+
+      film = provider.film
+      begin
+        film.update_with_flixster_json json
+      rescue => exception
+        puts exception
+      end
+
     end
 
     film

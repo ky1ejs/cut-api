@@ -35,19 +35,7 @@ class Film < ApplicationRecord
     provider.provider_film_id = json[:id].to_s
     f.providers = [provider]
 
-    flixster_poster_type_map = {
-      :thumbnail => :thumbnail,
-      :profile => :medium,
-      :detailed => :large
-    }
-    posters_json = json[:poster]
-
-    f.posters = posters_json.map do |key, value|
-      poster = Poster.new
-      poster.size = flixster_poster_type_map[key]
-      poster.url = posters_json[key]
-      poster
-    end
+    f.posters = json[:poster].values.select { |url| url.length > 0 }.map { |url| Poster.from_flixster_url url }
 
     reviews = json[:reviews]
 
@@ -78,7 +66,6 @@ class Film < ApplicationRecord
   end
 
   def update_with_flixster_json(json)
-
     f = Film.from_flixster json
 
     self.title                = f.title
@@ -86,24 +73,15 @@ class Film < ApplicationRecord
     self.theater_release_date = f.theater_release_date
     self.synopsis             = f.synopsis
 
-    updated_posters_by_size = {}
-    f.posters.each do |poster|
-      updated_posters_by_size[poster.size] = poster
-    end
-    if !self.posters.nil?
-      removed_posters = []
-      self.posters.each do |poster|
-        # Remove deleted posters
-        if !updated_posters_by_size.keys.include? poster.size
-          removed_posters.push poster
-          next
-        end
+    if self.posters != nil
+      new_poster_urls = f.posters.map { |poster| poster.url }
+      removed_posters = self.posters.map { |poster| new_poster_urls.include?(poster.url) ? nil : poster }.compact
 
-        poster.url = updated_posters_by_size[poster.size].url
-        updated_posters_by_size.delete poster.size
-      end
-      self.posters -= removed_posters
-      self.posters += updated_posters_by_size.values
+      existing_poster_urls = self.posters.map { |poster| poster.url }
+      added_posters = f.posters.map { |poster| existing_poster_urls.include?(poster.url) ? nil : poster }.compact
+
+      removed_posters.each { |posters| posters.destroy! }
+      self.posters = self.posters - removed_posters + added_posters
     else
       self.posters = f.posters
     end
@@ -130,6 +108,8 @@ class Film < ApplicationRecord
     else
       self.ratings = f.ratings
     end
+
+    self.save!
   end
 
   def as_json(options = {})

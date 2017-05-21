@@ -9,7 +9,8 @@ RSpec.describe FlixsterController, :type => :controller do
     running_time = 97
     running_time_description = "1 hr. 37 min."
     theater_release_date = Date.new(2017, 4, 7)
-    poster_url = "http://poster.com/image.jpg"
+    poster_width = 61
+    poster_height = 91
     poster_size = :thumbnail
     synopsis = "Best movie ever"
 
@@ -29,7 +30,8 @@ RSpec.describe FlixsterController, :type => :controller do
       },
       synopsis: synopsis,
       poster_size: poster_size,
-      poster_url: poster_url,
+      poster_width: poster_width,
+      poster_height: poster_height,
       user_score_count: flixster_num_of_scores,
       user_score: flxster_user_score,
       rotten_tomatoes_score: rotten_tomatoes_score
@@ -48,8 +50,9 @@ RSpec.describe FlixsterController, :type => :controller do
     expect(f.title).to eq title
     expect(f.running_time).to eq running_time
     expect(f.theater_release_date).to eq theater_release_date
-    expect(f.posters.first.url).to eq poster_url
-    expect(f.posters.first.size).to eq poster_size.to_s
+    expect(f.posters.first.url).to eq json[:poster].first[1]
+    expect(f.posters.first.width).to eq poster_width
+    expect(f.posters.first.height).to eq poster_height
     expect(f.synopsis).to eq synopsis
 
     expect(f.ratings.count).to eq 2

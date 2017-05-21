@@ -1,6 +1,23 @@
 class Poster < ApplicationRecord
-    enum size: [ :thumbnail, :small, :medium, :large ]
-    validates :film_id, uniqueness: { scope: :size }
+  validates :film, :presence => true
+  validates :film, uniqueness: { scope: [:width, :height] }
 
-    belongs_to :film
+  belongs_to :film
+
+  def self.from_flixster_url(url)
+    regex = /https?:\/\/resizing.flixster.com\/.+\/(?<width>[0-9]+)x(?<height>[0-9]+)\/.+/
+    size = url.match regex
+
+    width = size.try(:[], :width).try { to_i }
+    height = size.try(:[], :height).try { to_i }
+
+    return if width == nil || width.to_i == 0
+    return if height == nil || height.to_i == 0
+
+    poster = Poster.new
+    poster.width = width
+    poster.height = height
+    poster.url = url
+    poster
+  end
 end

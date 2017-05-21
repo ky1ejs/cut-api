@@ -1,6 +1,5 @@
 class WantToWatchController < ApplicationController
   def index
-    puts device.user.watch_list.count
     render json: device.user.want_to_watch_list.map { |w| w.film  }.as_json(include: :posters)
   end
 

@@ -58,11 +58,12 @@ ActiveRecord::Schema.define(version: 20170419182513) do
   create_table "posters", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.uuid     "film_id",    null: false
     t.citext   "url",        null: false
-    t.integer  "size",       null: false
+    t.integer  "width",      null: false
+    t.integer  "height",     null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["size", "film_id"], name: "index_posters_on_size_and_film_id", unique: true, using: :btree
     t.index ["url"], name: "index_posters_on_url", unique: true, using: :btree
+    t.index ["width", "height", "film_id"], name: "index_posters_on_width_and_height_and_film_id", unique: true, using: :btree
   end
 
   create_table "ratings", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|

@@ -7,8 +7,8 @@ FactoryGirl.define do
     skip_create
 
     transient do
-      poster_size           { :small }
-      poster_url            { "https://test.com/image.jpg" }
+      poster_width          { 61 }
+      poster_height         { 91 }
       user_score_count      { 1000 }
       user_score            { 89 }
       rotten_tomatoes_score { 83 }
@@ -48,7 +48,7 @@ FactoryGirl.define do
       }
     ]}
     synopsis "Sweet ass movie"
-    poster {{ poster_size => poster_url }}
+    poster {{ :thumbnail => "http://resizing.flixster.com/fViM/#{poster_width}x#{poster_height}/32131" }}
     reviews {{
       :flixster => {
         :numScores => user_score_count,
