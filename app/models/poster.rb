@@ -13,6 +13,7 @@ class Poster < ApplicationRecord
 
     return if width == nil || width.to_i == 0
     return if height == nil || height.to_i == 0
+    return if width >= height
 
     poster = Poster.new
     poster.width = width

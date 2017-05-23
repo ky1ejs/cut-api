@@ -35,7 +35,7 @@ class Film < ApplicationRecord
     provider.provider_film_id = json[:id].to_s
     f.providers = [provider]
 
-    f.posters = json[:poster].values.select { |url| url.length > 0 }.map { |url| Poster.from_flixster_url url }
+    f.posters = json[:poster].values.select { |url| url.length > 0 }.map { |url| Poster.from_flixster_url url }.compact
 
     reviews = json[:reviews]
 
