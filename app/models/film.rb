@@ -116,8 +116,8 @@ class Film < ApplicationRecord
     options[:include] ||= [:ratings]
     json = super(options)
 
-    posters = self.posters.group_by { |poster| poster.size_index }
-    posters = posters.map { |k, v| v.sort_by { |poster| poster.short_side_length } }
+    grouped_posters = self.posters.group_by { |poster| poster.size_index }
+    posters = grouped_posters.map { |k, v| v.sort_by { |poster| poster.short_side_length } }
     posters = posters.map { |g| g.last } # get the biggest for each size group
 
     size_sorted_posters = self.posters.sort_by { |poster| poster.short_side_length }
@@ -128,6 +128,34 @@ class Film < ApplicationRecord
     posters.each { |poster| poster_json[poster.size_name] = poster.as_json }
     poster_json['smallest'] = smallest_poster
     poster_json['largest'] = largest_poster
+
+    profile_poster = poster_json['large']
+    if profile_poster == nil
+      all_posters = grouped_posters.values.flatten
+      profile_poster = all_posters.first
+      puts all_posters
+      all_posters.each do |poster|
+        if poster.short_side_length > 500
+          next
+        end
+        if  profile_poster.short_side_length < poster.short_side_length
+          profile_poster = poster
+        end
+      end
+    end
+    poster_json['profile'] = profile_poster
+
+    hero_poster = poster_json['extra_large']
+    if hero_poster == nil
+      all_posters = grouped_posters.values.flatten
+      hero_poster = all_posters.first
+      all_posters.each do |poster|
+        next if poster.short_side_length > 1000
+        hero_poster = poster if hero_poster.short_side_length < poster.short_side_length
+      end
+    end
+    poster_json['hero'] = hero_poster
+
     json['posters'] = poster_json
     json
   end
