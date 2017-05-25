@@ -61,7 +61,7 @@ class UserController < ApplicationController
       n = NewFollowerNotification.new
       n.user = user
       n.follower = device.user
-      d.save!
+      n.save!
     end
 
     device.user.save!
