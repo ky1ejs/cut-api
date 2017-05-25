@@ -10,6 +10,7 @@ class User < ApplicationRecord
   has_many :following_records, foreign_key: :follower_id, class_name: "Follow"
   has_many :followers, through: :follower_records
   has_many :following, through: :following_records
+  has_many :notifications
 
   def want_to_watch_list
     self.watch_list_records.select { |r| !r.watched }

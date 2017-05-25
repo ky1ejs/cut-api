@@ -27,6 +27,16 @@ FactoryGirl.define do
         create_list(:film_provider, 1, provider: evaluator.provider, provider_film_id: evaluator.provider_film_id, film: film)
       end
 
+      factory :rotten_tomatoes_rated_film do
+        transient do
+          source { :rotten_tomatoes }
+          score { 0.80 }
+        end
+
+        after(:create) do |film, evaluator|
+          create_list(:rating, 1, source: evaluator.source, score: evaluator.score, film: film)
+        end
+      end
     end
   end
 end

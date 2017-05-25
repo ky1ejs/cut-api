@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170419182513) do
+ActiveRecord::Schema.define(version: 20170523190543) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -55,6 +55,17 @@ ActiveRecord::Schema.define(version: 20170419182513) do
     t.index ["follower_id", "following_id"], name: "index_follows_on_follower_id_and_following_id", unique: true, using: :btree
   end
 
+  create_table "notifications", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
+    t.uuid     "user_id",                     null: false
+    t.string   "type",                        null: false
+    t.boolean  "read",        default: false, null: false
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.uuid     "rating_id"
+    t.uuid     "follower_id"
+    t.uuid     "watch_id"
+  end
+
   create_table "posters", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.uuid     "film_id",    null: false
     t.citext   "url",        null: false
@@ -81,9 +92,15 @@ ActiveRecord::Schema.define(version: 20170419182513) do
     t.citext   "username"
     t.string   "hashed_password"
     t.string   "salt"
-    t.datetime "last_seen",       null: false
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.datetime "last_seen",                                             null: false
+    t.boolean  "notify_on_new_film",                     default: true, null: false
+    t.float    "film_rating_notification_threshold",     default: 0.8,  null: false
+    t.integer  "earliest_new_film_notification",         default: 3,    null: false
+    t.integer  "lastest_new_film_notification",          default: 25,   null: false
+    t.boolean  "notify_on_follower_rating",              default: true, null: false
+    t.integer  "follower_rating_notification_threshold", default: 4,    null: false
+    t.datetime "created_at",                                            null: false
+    t.datetime "updated_at",                                            null: false
     t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
     t.index ["username"], name: "index_users_on_username", unique: true, using: :btree
   end
@@ -102,6 +119,10 @@ ActiveRecord::Schema.define(version: 20170419182513) do
   add_foreign_key "film_providers", "films", on_delete: :cascade
   add_foreign_key "follows", "users", column: "follower_id", on_delete: :cascade
   add_foreign_key "follows", "users", column: "following_id", on_delete: :cascade
+  add_foreign_key "notifications", "ratings", on_delete: :cascade
+  add_foreign_key "notifications", "users", column: "follower_id", on_delete: :cascade
+  add_foreign_key "notifications", "users", on_delete: :cascade
+  add_foreign_key "notifications", "watches", on_delete: :cascade
   add_foreign_key "posters", "films", on_delete: :cascade
   add_foreign_key "ratings", "films", on_delete: :cascade
   add_foreign_key "watches", "films", on_delete: :cascade

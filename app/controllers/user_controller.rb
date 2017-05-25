@@ -58,10 +58,10 @@ class UserController < ApplicationController
       device.user.following.delete(user)
     elsif request.post?
       device.user.following.push(user)
-      message = "#{device.user.username} followed you!"
-      user.devices.each do |d|
-        NotificationService.publish(message, d)
-      end
+      n = NewFollowerNotification.new
+      n.user = user
+      n.follower = device.user
+      d.save!
     end
 
     device.user.save!

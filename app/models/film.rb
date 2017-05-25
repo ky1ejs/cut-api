@@ -159,4 +159,9 @@ class Film < ApplicationRecord
     json['posters'] = poster_json
     json
   end
+
+  def rotten_tomato_rating
+    self.ratings.each { |r| return r if r.source == 'rotten_tomatoes' }
+    nil
+  end
 end

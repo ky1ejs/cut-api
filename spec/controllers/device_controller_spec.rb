@@ -15,7 +15,7 @@ RSpec.describe DeviceController, type: :controller do
   end
 
   it "should remove push tokens" do
-    d = create(:device_with_token)
+    d = create(:device_with_push_token)
 
     request.headers[:HTTP_DEVICE_ID] = "#{d.platform}_#{d.id}"
     delete :remove_push_token
