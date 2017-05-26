@@ -20,12 +20,11 @@ namespace :films do
       next if r == nil
 
       User.all.each do |u|
+        next if NewFilmRatingNotification.find_by(user_id: u.id, rating_id: r.id) == nil
         next if !u.notify_on_new_film
         next if r.score < u.film_rating_notification_threshold
 
         release_date_difference = ((r.film.theater_release_date - DateTime.now) / 1.day).to_i
-        puts r.film.theater_release_date
-        puts release_date_difference
         next if release_date_difference < -u.lastest_new_film_notification
         next if release_date_difference > u.earliest_new_film_notification
 
