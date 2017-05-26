@@ -12,7 +12,7 @@ class CreateNotifications < ActiveRecord::Migration[5.0]
       t.uuid        :rating_id
 
       # NewFollowerNotfication
-      t.uuid        :follower_id
+      t.uuid        :follow_id
 
       # NewFollowedUserFilmRatingNotification
       t.uuid        :watch_id
@@ -20,7 +20,7 @@ class CreateNotifications < ActiveRecord::Migration[5.0]
 
     add_foreign_key :notifications, :users,     column: :user_id,     on_delete: :cascade
     add_foreign_key :notifications, :ratings,   column: :rating_id,   on_delete: :cascade
-    add_foreign_key :notifications, :users,     column: :follower_id, on_delete: :cascade
+    add_foreign_key :notifications, :follows,   column: :follow_id,   on_delete: :cascade
     add_foreign_key :notifications, :watches,   column: :watch_id,    on_delete: :cascade
   end
 end

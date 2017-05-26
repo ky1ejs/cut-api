@@ -56,13 +56,13 @@ ActiveRecord::Schema.define(version: 20170523190543) do
   end
 
   create_table "notifications", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
-    t.uuid     "user_id",                     null: false
-    t.string   "type",                        null: false
-    t.boolean  "read",        default: false, null: false
-    t.datetime "created_at",                  null: false
-    t.datetime "updated_at",                  null: false
+    t.uuid     "user_id",                    null: false
+    t.string   "type",                       null: false
+    t.boolean  "read",       default: false, null: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
     t.uuid     "rating_id"
-    t.uuid     "follower_id"
+    t.uuid     "follow_id"
     t.uuid     "watch_id"
   end
 
@@ -119,8 +119,8 @@ ActiveRecord::Schema.define(version: 20170523190543) do
   add_foreign_key "film_providers", "films", on_delete: :cascade
   add_foreign_key "follows", "users", column: "follower_id", on_delete: :cascade
   add_foreign_key "follows", "users", column: "following_id", on_delete: :cascade
+  add_foreign_key "notifications", "follows", on_delete: :cascade
   add_foreign_key "notifications", "ratings", on_delete: :cascade
-  add_foreign_key "notifications", "users", column: "follower_id", on_delete: :cascade
   add_foreign_key "notifications", "users", on_delete: :cascade
   add_foreign_key "notifications", "watches", on_delete: :cascade
   add_foreign_key "posters", "films", on_delete: :cascade
