@@ -57,10 +57,14 @@ class UserController < ApplicationController
     if request.delete?
       device.user.following.delete(user)
     elsif request.post?
-      device.user.following.push(user)
+      f = Follow.new
+      f.follower = device.user
+      f.following = user
+      f.save!
+      
       n = NewFollowerNotification.new
       n.user = user
-      n.follower = device.user
+      n.follow = f
       n.save!
     end
 
