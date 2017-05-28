@@ -96,7 +96,7 @@ ActiveRecord::Schema.define(version: 20170523190543) do
     t.boolean  "notify_on_new_film",                     default: true, null: false
     t.float    "film_rating_notification_threshold",     default: 0.8,  null: false
     t.integer  "earliest_new_film_notification",         default: 3,    null: false
-    t.integer  "lastest_new_film_notification",          default: 25,   null: false
+    t.integer  "lastest_new_film_notification",          default: 30,   null: false
     t.boolean  "notify_on_follower_rating",              default: true, null: false
     t.integer  "follower_rating_notification_threshold", default: 4,    null: false
     t.datetime "created_at",                                            null: false

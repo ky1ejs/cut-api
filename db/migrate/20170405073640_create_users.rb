@@ -13,7 +13,7 @@ class CreateUsers < ActiveRecord::Migration[5.0]
       t.boolean   :notify_on_new_film,                      null: false, default: true
       t.float     :film_rating_notification_threshold,      null: false, default: 0.80
       t.integer   :earliest_new_film_notification,          null: false, default: 3
-      t.integer   :lastest_new_film_notification,           null: false, default: 25
+      t.integer   :lastest_new_film_notification,           null: false, default: 30
 
       t.boolean   :notify_on_follower_rating,               null: false, default: true
       t.integer   :follower_rating_notification_threshold,  null: false, default: 4
