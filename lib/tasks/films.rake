@@ -35,4 +35,11 @@ namespace :films do
       end
     end
   end
+
+  desc "update all films"
+  task :update => :environment do
+    providers = FilmProvider.where(provider: :flixster)
+    flixster = FlixsterController.new
+    providers.each { |prov| flixster.update_or_create_film_with_id prov.provider_film_id }
+  end
 end
