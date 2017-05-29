@@ -33,7 +33,7 @@ class FlixsterController < ApplicationController
   def search(term)
     query = {
       "cbr" => "1",
-      "country" => "UK",
+      "country" => "US",
       "deviceType" => "iPhone",
       "filter" => term,
       "limit" => "3",
@@ -58,7 +58,7 @@ class FlixsterController < ApplicationController
   def update_or_create_film_with_id(id)
     query = {
       "cbr" => "1",
-      "country" => "UK",
+      "country" => "US",
       "deviceType" => "iPhone",
       "locale" => "en_GB",
       "version" => "7.13.3",
