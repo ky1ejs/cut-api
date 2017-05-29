@@ -133,7 +133,6 @@ class Film < ApplicationRecord
     if profile_poster == nil
       all_posters = grouped_posters.values.flatten
       profile_poster = all_posters.first
-      puts all_posters
       all_posters.each do |poster|
         if poster.short_side_length > 500
           next
@@ -157,6 +156,9 @@ class Film < ApplicationRecord
     poster_json['hero'] = hero_poster
 
     json['posters'] = poster_json
+
+    json['relative_theater_release_date'] = theater_release_date.relative_time_string if theater_release_date != nil
+
     json
   end
 
