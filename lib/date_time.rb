@@ -2,7 +2,7 @@ module RelativeDate
   def relative_time_string(options = {})
     options = {scope: :'datetime.distance_in_words'}.merge!(options)
 
-    distance_in_days = (self.to_datetime.beginning_of_day - DateTime.now)
+    distance_in_days = self.to_datetime.beginning_of_day - DateTime.now
     abs_distance_in_days = distance_in_days.abs.floor
     abs_distance_in_days += 1 if distance_in_days > 0
 
