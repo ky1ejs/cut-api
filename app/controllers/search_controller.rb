@@ -11,10 +11,16 @@ class SearchController < ApplicationController
     end
 
     film_results = Film.where "title LIKE ?", "%#{params[:term]}%"
+
+    if film_results.count == 0
+      film_results = FlixsterController.new.search(params[:term])
+    end
+
     json = {
       'users' => user_results_json,
       'films' => film_results.as_json(include: :posters)
     }
+
     render json: json
   end
 end
