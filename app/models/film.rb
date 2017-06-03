@@ -6,79 +6,18 @@ class Film < ApplicationRecord
   validates :title, presence: true
   validates :running_time, numericality: { greater_than: 0 }, allow_nil: true
 
-  def self.from_flixster(json)
-    title = json[:title]
-
-    running_time_string = json[:runningTime]
-    running_time_regex = /(?<hours>\d{1}) hr\. ?(?<mins>\d{1,2})?/
-    running_time_data = running_time_string.match(running_time_regex)
-
-    if !running_time_data.nil?
-      hours = running_time_data[:hours].to_i * 60
-      running_time = hours + running_time_data[:mins].to_i
-    end
-
-    t_release_date = json[:theaterReleaseDate]
-    year = t_release_date[:year].to_i
-    month = t_release_date[:month].to_i
-    day = t_release_date[:day].to_i
-    theater_release_date = Date.new year, month, day unless year == 0 || month == 0 || day == 0
-
-    f = Film.new
-    f.title = title
-    f.running_time = running_time
-    f.synopsis = json[:synopsis]
-    f.theater_release_date = theater_release_date
-
-    provider = FilmProvider.new
-    provider.provider = :flixster
-    provider.provider_film_id = json[:id].to_s
-    f.providers = [provider]
-
-    f.posters = json[:poster].values.select { |url| url.length > 0 }.map { |url| Poster.from_flixster_url url }.compact
-
-    reviews = json[:reviews]
-
-    ratings = []
-
-    r_t_score = reviews[:rottenTomatoes].try(:[], :rating)
-    if !r_t_score.nil?
-      critic_review_count = reviews[:criticsNumReviews]
-      rotten_toms_rating = Rating.new
-      rotten_toms_rating.score = r_t_score / Float(100)
-      rotten_toms_rating.count = critic_review_count
-      rotten_toms_rating.source = :rotten_tomatoes
-      ratings.push(rotten_toms_rating)
-    end
-
-    fx_user_scores = reviews[:flixster]
-    if !fx_user_scores.nil?
-      fx_user_rating = Rating.new
-      fx_user_rating.score = fx_user_scores[:popcornScore] / Float(100)
-      fx_user_rating.count = fx_user_scores[:numScores]
-      fx_user_rating.source = :flixster_users
-      ratings.push(fx_user_rating)
-    end
-
-    f.ratings = ratings
-
-    return f
-  end
-
-  def update_with_flixster_json(json)
-    f = Film.from_flixster json
-
-    self.title                = f.title
-    self.running_time         = f.running_time
-    self.theater_release_date = f.theater_release_date
-    self.synopsis             = f.synopsis
+  def update_with_film(updated_film)
+    self.title                = updated_film.title
+    self.running_time         = updated_film.running_time
+    self.theater_release_date = updated_film.theater_release_date
+    self.synopsis             = updated_film.synopsis
 
     if self.posters != nil
-      new_poster_urls = f.posters.map { |poster| poster.url }
-      removed_posters = self.posters.map { |poster| new_poster_urls.include?(poster.url) ? nil : poster }.compact
+      update_to_date_poster_urls = updated_film.posters.map { |poster| poster.url }
+      removed_posters = self.posters.map { |poster| update_to_date_poster_urls.include?(poster.url) ? nil : poster }.compact
 
       existing_poster_urls = self.posters.map { |poster| poster.url }
-      added_posters = f.posters.map { |poster| existing_poster_urls.include?(poster.url) ? nil : poster }.compact
+      added_posters = updated_film.posters.map { |poster| existing_poster_urls.include?(poster.url) ? nil : poster }.compact
 
       removed_posters.each { |posters| posters.destroy! }
       self.posters = self.posters - removed_posters + added_posters
@@ -87,7 +26,7 @@ class Film < ApplicationRecord
     end
 
     updated_ratings_by_source = {}
-    f.ratings.each do |r|
+    updated_film.ratings.each do |r|
       updated_ratings_by_source[r.source] = r
     end
     if !self.ratings.nil?
@@ -106,7 +45,7 @@ class Film < ApplicationRecord
       self.ratings -= removed_ratings # Remove deleted ratings
       self.ratings += updated_ratings_by_source.values # Add new ratings
     else
-      self.ratings = f.ratings
+      self.ratings = updated_film.ratings
     end
 
     self.save!
@@ -160,6 +99,22 @@ class Film < ApplicationRecord
     json['relative_theater_release_date'] = theater_release_date.relative_time_string if theater_release_date != nil
 
     json
+  end
+
+  def self.update_or_create_film(film)
+    existing_providers = film.providers.map do |prov|
+      FilmProvider.find_by(provider_film_id: prov.provider_film_id, provider: prov.provider)
+    end
+    existing_providers = existing_providers.compact
+
+    if existing_providers.count == 0
+      film.save!
+      return film
+    else
+      existing_film = existing_providers.first.film
+      existing_film.update_with_film film
+      return existing_film
+    end
   end
 
   def rotten_tomato_rating

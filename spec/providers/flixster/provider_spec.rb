@@ -1,11 +1,7 @@
 require "rails_helper"
 
-RSpec.describe Film, :type => :model do
-  it "updates from flixster json" do
-    f = Film.new
-    f.title = "Test title"
-    f.save!
-
+RSpec.describe Flixster::Provider, :type => :class do
+  it "parses a movie from Flixster" do
     title = "Interstellar"
     running_time = 97
     running_time_description = "1 hr. 37 min."
@@ -35,8 +31,8 @@ RSpec.describe Film, :type => :model do
       rotten_tomatoes_score: rotten_tomatoes_score
     )
 
-    updated_film = Flixster::Provider.parse_film json
-    f.update_with_film updated_film
+    f = Flixster::Provider.parse_film(json)
+    f.save
 
     expect(f.title).to eq title
     expect(f.running_time).to eq running_time
@@ -56,21 +52,8 @@ RSpec.describe Film, :type => :model do
     expect(f.ratings[1].count).to eq flixster_num_of_scores
     expect(f.ratings[1].source).to eq :flixster_users.to_s
 
-    f.destroy!
-  end
+    f.destroy
 
-  it "handles updated and delete posters" do
-    f = create(:film_with_posters, poster_width: 100, poster_height: 200)
-
-    poster_width = 61
-    poster_height = 91
-
-    json = create(:flixster_film_json, poster_width: poster_width, poster_height: poster_height)
-    updated_film = Flixster::Provider.parse_film json
-
-    expect { f.update_with_film updated_film }.to_not raise_error
-    expect(f.posters.count).to eq 1
-    expect(f.posters.first.width).to eq poster_width
-    expect(f.posters.first.height).to eq poster_height
+    expect(f.ratings.count).to eq 0
   end
 end

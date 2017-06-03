@@ -1,5 +1,3 @@
-require 'httparty'
-
 class FlixsterController < ApplicationController
   def self.movies_url
     'https://api.flixster.com/iphone/api/v2/movies'
@@ -56,47 +54,12 @@ class FlixsterController < ApplicationController
   end
 
   def update_or_create_film_with_id(id)
-    query = {
-      "cbr" => "1",
-      "country" => "US",
-      "deviceType" => "iPhone",
-      "locale" => "en_GB",
-      "version" => "7.13.3",
-      "view" => "long"
-    }
-
+    film = Flixster::Provider.get_film_with_id id
     begin
-      response = HTTParty.get "#{self.class.movies_url}/#{id}.json", query: query
+      film = Film.update_or_create_film film
     rescue => exception
       puts exception
     end
-
-    return if response      == nil
-    return if response.code != 200
-
-    json = JSON.parse response, symbolize_names: true
-
-    provider = FilmProvider.find_by(provider_film_id: id, provider: :flixster)
-    if provider.nil?
-
-      film = Film.from_flixster json
-      begin
-        film.save!
-      rescue => exception
-        puts exception
-      end
-
-    else
-
-      film = provider.film
-      begin
-        film.update_with_flixster_json json
-      rescue => exception
-        puts exception
-      end
-
-    end
-
     film
   end
 end
