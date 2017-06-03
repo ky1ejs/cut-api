@@ -55,7 +55,8 @@ module Flixster
       provider.provider_film_id = json[:id].to_s
       f.providers = [provider]
 
-      f.posters = json[:poster].values.select { |url| url.length > 0 }.map { |url| Poster.from_flixster_url url }.compact
+      urls = Set.new json[:poster].values
+      f.posters = urls.select { |url| url.length > 0 }.map { |url| parse_poster url }.compact
 
       reviews = json[:reviews]
 
@@ -83,6 +84,24 @@ module Flixster
       f.ratings = ratings
 
       f
+    end
+
+    def self.parse_poster(url)
+      regex = /https?:\/\/resizing.flixster.com\/.+\/(?<width>[0-9]+)x(?<height>[0-9]+)\/.+/
+      size = url.match regex
+
+      width = size.try(:[], :width).try { to_i }
+      height = size.try(:[], :height).try { to_i }
+
+      return if width == nil || width.to_i == 0
+      return if height == nil || height.to_i == 0
+      return if width >= height
+
+      poster = Poster.new
+      poster.width = width
+      poster.height = height
+      poster.url = url
+      poster
     end
   end
 end

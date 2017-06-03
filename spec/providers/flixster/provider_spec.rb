@@ -56,4 +56,51 @@ RSpec.describe Flixster::Provider, :type => :class do
 
     expect(f.ratings.count).to eq 0
   end
+
+  it "parses poster urls" do
+    urls = [
+      {
+        'width' => 61,
+        'height' => 91,
+        'url' => "http://resizing.flixster.com/6IW9Gb-ooPSDOKJQr2XnAPbjB3c=/61x91/v1.bTsxMjM1MDcyMDtqOzE3Mzk3OzIwNDg7NDE4Nzs2MTM3"
+      },
+      {
+        'width' => 120,
+        'height' => 176,
+        'url' => "http://resizing.flixster.com/8L2FdKU2P_EpHtwhhWoHC9Ukm-k=/120x176/v1.bTsxMjM1MDcyMDtqOzE3Mzk3OzIwNDg7NDE4Nzs2MTM3"
+      },
+      {
+        'width' => 180,
+        'height' => 264,
+        'url' => "http://resizing.flixster.com/EcMNRjyAjfs9nxlvH3i2-BWOgG8=/180x264/v1.bTsxMjM1MDcyMDtqOzE3Mzk3OzIwNDg7NDE4Nzs2MTM3"
+      },
+      {
+        'width' => 320,
+        'height' => 469,
+        'url' => "http://resizing.flixster.com/jc5OvtgurU9FBygm04e7ZXF1fb8=/320x469/v1.bTsxMjM1MDcyMDtqOzE3Mzk3OzIwNDg7NDE4Nzs2MTM3"
+      },
+      {
+        'width' => 500,
+        'height' => 733,
+        'url' => "http://resizing.flixster.com/rJ9l4LrDu0Boko_L0XnsskoPKTw=/500x733/v1.bTsxMjM1MDcyMDtqOzE3Mzk3OzIwNDg7NDE4Nzs2MTM3"
+      },
+      {
+        'width' => 800,
+        'height' => 1173,
+        'url' => "http://resizing.flixster.com/RXOK7oZALdWcYNg7xRCgw4LaqCE=/800x1173/v1.bTsxMjM1MDcyMDtqOzE3Mzk3OzIwNDg7NDE4Nzs2MTM3"
+      },
+      {
+        'width' => 4187,
+        'height' => 6137,
+        'url' => "http://resizing.flixster.com/Ol6Vre-t7dA_kFQ5YtZ7G1kRIwY=/4187x6137/v1.bTsxMjM1MDcyMDtqOzE3Mzk3OzIwNDg7NDE4Nzs2MTM3"
+      }
+    ]
+
+    urls.each do |url|
+      parsed_url = Flixster::Provider.parse_poster url['url']
+      expect(parsed_url.url).to eq url['url']
+      expect(parsed_url.width).to eq url['width']
+      expect(parsed_url.height).to eq url['height']
+    end
+  end
 end
