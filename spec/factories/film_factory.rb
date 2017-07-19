@@ -1,6 +1,8 @@
 FactoryGirl.define do
   factory :film do
-    title "Test Film"
+    sequence :title do |n|
+      "Test Film #{n}"
+    end
 
     factory :film_with_posters do
       transient do
