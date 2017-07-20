@@ -22,6 +22,6 @@ RSpec.describe FeedController, type: :controller do
     request.headers[:HTTP_DEVICE_ID] = "#{d.platform}_#{d.id}"
     get :index
 
-    expect(watches.to_json(include: :film)).to eq response.body
+    expect(watches.to_json(include: [:film, :user])).to eq response.body
   end
 end
