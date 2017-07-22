@@ -1,14 +1,18 @@
 class ApplicationController < ActionController::API
   def device
+    device_id = request.headers[:HTTP_DEVICE_ID]
+
+    return @device if @device&.device_id == device_id
+
     regex = /^(?<platform>[a-z]*)_(?<id>[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})$/i
-    device_id = request.headers[:HTTP_DEVICE_ID].match regex
+    device_id = device_id.match regex
 
     is_dev_device = request.headers[:HTTP_IS_DEV_DEVICE]
 
-    d = Device.find_or_create_by(id: device_id[:id], platform: device_id[:platform])
-    d.is_dev_device = true if request.headers[:HTTP_IS_DEV_DEVICE] == 'true'
-    d.user.last_seen = Time.now
-    d.user.save!
-    d
+    @device = Device.find_or_create_by(id: device_id[:id], platform: device_id[:platform])
+    @device.is_dev_device = true if request.headers[:HTTP_IS_DEV_DEVICE] == 'true'
+    @device.user.last_seen = Time.now
+    @device.user.save!
+    @device
   end
 end

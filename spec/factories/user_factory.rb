@@ -14,4 +14,7 @@ FactoryGirl.define do
       password "Secure12345"
     end
   end
+
+  factory :user_without_device, class: User do
+  end
 end

@@ -61,7 +61,7 @@ class UserController < ApplicationController
       f.follower = device.user
       f.following = user
       f.save!
-      
+
       n = NewFollowerNotification.new
       n.user = user
       n.follow = f
@@ -71,5 +71,17 @@ class UserController < ApplicationController
     device.user.save!
 
     render status: 200
+  end
+
+  def login
+    user = User.find_by(username: params[:username])
+
+    if user&.check_password(params[:password]) == true
+      device.user = user
+      device.save!
+      render status: 200
+    else
+      render status: 422
+    end
   end
 end

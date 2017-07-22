@@ -15,4 +15,16 @@ RSpec.describe Device, :type => :model do
     expect(d.new_record?).to eq false
     expect(d.id).to eq uuid
   end
+
+  it 'allows changing of user' do
+    d = create(:device)
+
+    expect(d.user).not_to eq nil
+
+    new_user = create(:user)
+    d.user = new_user
+    d.save!
+
+    expect(d.user.id).to eq new_user.id
+  end
 end

@@ -17,4 +17,17 @@ RSpec.describe ApplicationController, :type => :controller do
 
     d.destroy!
   end
+
+  it 'doesn\'t persist devices across calls' do
+    d1 = create(:device)
+    @request.env['HTTP_DEVICE_ID'] = d1.device_id
+    expect(subject.device.id).to eq d1.id
+    expect(subject.device.platform).to eq d1.platform
+
+    d2 = create(:device)
+    @request.env['HTTP_DEVICE_ID'] = d2.device_id
+    expect(subject.device.id).to eq d2.id
+    expect(subject.device.platform).to eq d2.platform
+  end
+
 end

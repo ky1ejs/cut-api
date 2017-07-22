@@ -80,4 +80,22 @@ RSpec.describe UserController, type: :controller do
     expect(response_json['email']).to eq email
     expect(response_json['username']).to eq username
   end
+
+  it "logs a valid username and password in" do
+    username = 'test'
+    password = 'Password123'
+    initial_device = create(:device_with_user,
+                            username: username,
+                            password: password)
+    new_device = create(:device)
+
+    request.headers[:HTTP_DEVICE_ID] = new_device.device_id
+    post :login, params: {:username => username, password: password}
+
+    new_device.reload
+
+    expect(response.status).to eq 200
+    expect(initial_device.user.username).to eq new_device.user.username
+    expect(initial_device.user.id).to       eq new_device.user.id
+  end
 end
