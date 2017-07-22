@@ -90,4 +90,48 @@ RSpec.describe User, :type => :model do
     expect(json['following_count']).to eq 3
     expect(json['follower_count']).to eq 3
   end
+
+  it "adds followers via the 'followers' attribute" do
+    u = create(:full_user)
+    f = create(:full_user)
+
+    u.followers = [f]
+
+    expect(f.following.count).to eq 1
+    expect(f.following.first.id).to eq u.id
+
+    u.destroy!
+    f.destroy!
+
+    u = create(:full_user)
+    f = [create(:full_user), create(:full_user), create(:full_user)]
+
+    u.followers = f
+
+    expect(f.first.following.count).to eq 1
+    expect(u.followers.count).to eq 3
+    expect(f.first.following.first.id).to eq u.id
+  end
+
+  it "adds followers via the 'following' attribute" do
+    u = create(:full_user)
+    f = create(:full_user)
+
+    u.following = [f]
+
+    expect(f.followers.count).to eq 1
+    expect(f.followers.first.id).to eq u.id
+
+    u.destroy!
+    f.destroy!
+
+    u = create(:full_user)
+    f = [create(:full_user), create(:full_user), create(:full_user)]
+
+    u.following = f
+
+    expect(u.following.count).to eq 3
+    expect(f.first.followers.count).to eq 1
+    expect(f.first.followers.first.id).to eq u.id
+  end
 end
