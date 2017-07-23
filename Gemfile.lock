@@ -48,6 +48,10 @@ GEM
       amq-protocol (>= 2.1.0)
     byebug (9.0.6)
     chronic (0.10.2)
+    codecov (0.1.10)
+      json
+      simplecov
+      url
     coderay (1.1.1)
     concurrent-ruby (1.0.5)
     crack (0.4.3)
@@ -191,6 +195,7 @@ GEM
     thread_safe (0.3.6)
     tzinfo (1.2.3)
       thread_safe (~> 0.1)
+    url (0.3.2)
     webmock (3.0.1)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
@@ -210,6 +215,7 @@ DEPENDENCIES
   bcrypt
   bunny
   byebug
+  codecov
   factory_girl_rails (~> 4.0)
   guard
   guard-bundler
@@ -220,7 +226,6 @@ DEPENDENCIES
   puma (~> 3.0)
   rails (~> 5.0.2)
   rspec-rails (~> 3.5)
-  simplecov
   spring
   spring-watcher-listen (~> 2.0.0)
   tzinfo-data

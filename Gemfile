@@ -49,7 +49,7 @@ group :development, :test do
 
   gem 'whenever-test'
 
-  gem 'simplecov', :require => false
+  gem 'codecov', :require => false
 end
 
 group :development do
