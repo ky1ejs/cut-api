@@ -67,7 +67,7 @@ class User < ApplicationRecord
   before_save :encrypt_password
   after_save :clear_password
 
-  EMAIL_REGEX = /\A[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\z/i
+  EMAIL_REGEX = /\A.+@.+\..+$\z/i
   validate :validate_password, :validate_full_user
   validates :username, :presence => true, :allow_nil => true, :uniqueness => true
   validates :password, :presence => true, :allow_nil => true
