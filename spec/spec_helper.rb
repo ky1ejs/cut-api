@@ -19,6 +19,9 @@
 require 'webmock/rspec'
 WebMock.disable_net_connect!(allow_localhost: true)
 
+require 'simplecov'
+SimpleCov.start
+
 RSpec.configure do |config|
   config.before(:each) do
     stub_request(:get, /www.gravatar.com\/avatar\//).to_return(status: 200)

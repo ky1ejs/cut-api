@@ -48,6 +48,8 @@ group :development, :test do
   gem "webmock"
 
   gem 'whenever-test'
+
+  gem 'simplecov', :require => false
 end
 
 group :development do
