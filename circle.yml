@@ -6,6 +6,8 @@ machine:
     GCLOUD_AUTH_JSON: ${HOME}/account-auth.json
   services:
     - docker
+  ruby:
+    version: 2.3.0
 
 dependencies:
   pre:
