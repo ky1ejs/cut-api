@@ -1,24 +1,3 @@
-# README
-
-This README would normally document whatever steps are necessary to get the
-application up and running.
-
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+<div align='center'>
+  [![CircleCI](https://img.shields.io/circleci/project/github/kylejm/cut-api/master.svg)](https://circleci.com/gh/Moya/Moya/tree/master) [![codecov](https://codecov.io/gh/kylejm/cut-api/branch/master/graph/badge.svg)](https://codecov.io/gh/kylejm/cut-api) [![Dependency Status](https://gemnasium.com/badges/github.com/kylejm/cut-api.svg)](https://gemnasium.com/github.com/kylejm/cut-api) [![codebeat badge](https://codebeat.co/badges/7b1731c0-b8ef-4b74-a61f-cd928ef023ad)](https://codebeat.co/projects/github-com-kylejm-cut-api-master) [![Code Climate](https://codeclimate.com/github/kylejm/cut-api/badges/gpa.svg)](https://codeclimate.com/github/kylejm/cut-api) [![Issue Count](https://codeclimate.com/github/kylejm/cut-api/badges/issue_count.svg)](https://codeclimate.com/github/kylejm/cut-api)
+</div>
