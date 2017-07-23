@@ -21,7 +21,7 @@ WebMock.disable_net_connect!(allow_localhost: true)
 
 require 'simplecov'
 SimpleCov.start do
-  add_filter %r{^/spec/}
+  add_filter "/spec/"
 end
 
 require 'codecov'
