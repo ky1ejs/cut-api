@@ -61,7 +61,8 @@ class UserController < ApplicationController
       return
     end
 
-    new_user = User.find_by(username: params[:username])
+    new_user =    User.find_by(username: params[:email_or_username])
+    new_user ||=  User.find_by(email: params[:email_or_username])
 
     if new_user&.check_password(params[:password]) == true
       old_user = device.user

@@ -88,7 +88,23 @@ RSpec.describe UserController, type: :controller do
     new_device = create(:device)
 
     request.headers[:HTTP_DEVICE_ID] = new_device.device_id
-    post :login, params: {:username => username, password: password}
+    post :login, params: {:email_or_username => username, password: password}
+
+    new_device.reload
+
+    expect(response.status).to eq 200
+    expect(initial_device.user.username).to eq new_device.user.username
+    expect(initial_device.user.id).to       eq new_device.user.id
+  end
+
+  it "logs a valid email and password in" do
+    email = 'test@test.com'
+    password = 'Password123'
+    initial_device = create(:device_with_user, email: email, password: password)
+    new_device = create(:device)
+
+    request.headers[:HTTP_DEVICE_ID] = new_device.device_id
+    post :login, params: {:email_or_username => email, password: password}
 
     new_device.reload
 
@@ -104,7 +120,7 @@ RSpec.describe UserController, type: :controller do
     new_device = create(:device, user: create(:full_user))
 
     request.headers[:HTTP_DEVICE_ID] = new_device.device_id
-    post :login, params: {:username => username, password: password}
+    post :login, params: {:email_or_username => username, password: password}
 
     new_device.reload
 
@@ -125,7 +141,10 @@ RSpec.describe UserController, type: :controller do
     ]
 
     request.headers[:HTTP_DEVICE_ID] = new_device.device_id
-    post :login, params: { :username => initial_device.user.username, :password => password }
+    post :login, params: {
+      :email_or_username => initial_device.user.username,
+      :password => password
+    }
 
     new_device.reload
 
@@ -153,7 +172,10 @@ RSpec.describe UserController, type: :controller do
     create(:watch, user: new_device.user, film: film_2, rating: 5)
 
     request.headers[:HTTP_DEVICE_ID] = new_device.device_id
-    post :login, params: { :username => initial_device.user.username, :password => password }
+    post :login, params: {
+      :email_or_username => initial_device.user.username,
+      :password => password
+    }
 
     new_device.reload
 

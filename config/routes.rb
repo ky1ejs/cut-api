@@ -29,14 +29,13 @@ Rails.application.routes.draw do
 
     scope '/users' do
       get '/' => 'user#get_current_user'
+      scope '/login' do
+        post '/' => 'user#login'
+      end
       scope '/:username' do
         get     '/'  => 'user#get_user'
         post    '/' => 'user#follow_unfollow_user'
         delete  '/' => 'user#follow_unfollow_user'
-
-        scope '/login' do
-          post '/' => 'user#login'
-        end
       end
       post '/' => 'user#create_login'
     end
