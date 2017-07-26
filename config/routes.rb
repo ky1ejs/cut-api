@@ -39,9 +39,6 @@ Rails.application.routes.draw do
         end
       end
       post '/' => 'user#create_login'
-      scope '/devices' do
-        post '/' => 'user#add_device_to_user'
-      end
     end
 
     scope '/watch-list' do

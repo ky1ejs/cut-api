@@ -84,9 +84,7 @@ RSpec.describe UserController, type: :controller do
   it "logs a valid username and password in" do
     username = 'test'
     password = 'Password123'
-    initial_device = create(:device_with_user,
-                            username: username,
-                            password: password)
+    initial_device = create(:device_with_user, username: username, password: password)
     new_device = create(:device)
 
     request.headers[:HTTP_DEVICE_ID] = new_device.device_id
@@ -97,5 +95,72 @@ RSpec.describe UserController, type: :controller do
     expect(response.status).to eq 200
     expect(initial_device.user.username).to eq new_device.user.username
     expect(initial_device.user.id).to       eq new_device.user.id
+  end
+
+  it "does allow users to login if they're already logged in" do
+    username = 'test'
+    password = 'Password123'
+    initial_device = create(:device_with_user, username: username,password: password)
+    new_device = create(:device, user: create(:full_user))
+
+    request.headers[:HTTP_DEVICE_ID] = new_device.device_id
+    post :login, params: {:username => username, password: password}
+
+    new_device.reload
+
+    expect(response.status).to eq 422
+    expect(initial_device.user.username).not_to eq new_device.user.username
+    expect(initial_device.user.id).not_to       eq new_device.user.id
+  end
+
+  it "merges watch lists when a user successfully logs in" do
+    password = "Password123"
+    initial_device = create(:device_with_user, password: password)
+    new_device = create(:device)
+
+    existing_watches = [
+      create(:watch, film: create(:film), user: new_device.user),
+      create(:watch, film: create(:film), user: new_device.user),
+      create(:watch, film: create(:film), user: new_device.user)
+    ]
+
+    request.headers[:HTTP_DEVICE_ID] = new_device.device_id
+    post :login, params: { :username => initial_device.user.username, :password => password }
+
+    new_device.reload
+
+    expect(response.status).to eq 200
+    expect(initial_device.user.username).to eq new_device.user.username
+    expect(initial_device.user.id).to       eq new_device.user.id
+
+    existing_watches.each do |w|
+      w.reload
+      expect(w.user.id).to eq initial_device.user.id
+    end
+  end
+
+  it "favours the logging in user's watches over the current device's user's watches" do
+    password = "Password123"
+    initial_device = create(:device_with_user, password: password)
+    new_device = create(:device)
+
+    film_1 = create(:film)
+    create(:watch, user: initial_device.user, film: film_1, rating: 5)
+    create(:watch, user: new_device.user, film: film_1, rating: nil)
+
+    film_2 = create(:film)
+    create(:watch, user: initial_device.user, film: film_2, rating: nil)
+    create(:watch, user: new_device.user, film: film_2, rating: 5)
+
+    request.headers[:HTTP_DEVICE_ID] = new_device.device_id
+    post :login, params: { :username => initial_device.user.username, :password => password }
+
+    new_device.reload
+
+    expect(response.status).to eq 200
+    expect(initial_device.user.username).to eq new_device.user.username
+    expect(initial_device.user.id).to       eq new_device.user.id
+    expect(initial_device.user.watch_list_records[0].rating).to eq 5
+    expect(initial_device.user.watch_list_records[1].rating).to eq nil
   end
 end

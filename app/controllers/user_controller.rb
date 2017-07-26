@@ -27,24 +27,6 @@ class UserController < ApplicationController
     render json: u
   end
 
-  def add_device_to_user
-    u = User.find_by(email: params[:email])
-
-    if !u.check_password(params[:password]) || u.id == device.user.id
-      render status: 422
-      return
-    end
-
-    old_user = device.user
-
-    device.user = u
-    device.save!
-
-    old_user.destroy!
-
-    render status: 200
-  end
-
   def follow_unfollow_user
     username = params[:username]
 
@@ -74,11 +56,29 @@ class UserController < ApplicationController
   end
 
   def login
-    user = User.find_by(username: params[:username])
+    if device.user.is_full_user
+      render status: 422 # user is already logged in on this device
+      return
+    end
 
-    if user&.check_password(params[:password]) == true
-      device.user = user
+    new_user = User.find_by(username: params[:username])
+
+    if new_user&.check_password(params[:password]) == true
+      old_user = device.user
+
+      old_user.watch_list_records.each do |w|
+        if new_user.watch_list.map(&:id).include? w.film.id
+          next
+        end
+        w.user = new_user
+        w.save!
+      end
+
+      device.user = new_user
       device.save!
+
+      old_user.destroy!
+
       render status: 200
     else
       render status: 422
