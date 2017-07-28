@@ -30,4 +30,24 @@ RSpec.describe ApplicationController, :type => :controller do
     expect(subject.device.platform).to eq d2.platform
   end
 
+  it 'retrieves an existing device if with an upcase ID' do
+    d = create(:device)
+
+    @request.env['HTTP_DEVICE_ID'] = d.device_id.upcase
+
+    expect(d.id).to       eq subject.device.id
+    expect(d.platform).to eq subject.device.platform
+  end
+
+  it 'persists the current device throughout the request' do
+    d = create(:device)
+
+    @request.env['HTTP_DEVICE_ID'] = d.device_id
+
+    first_call = subject.device
+    second_call = subject.device
+
+    expect(first_call.object_id).to eq second_call.object_id
+  end
+
 end

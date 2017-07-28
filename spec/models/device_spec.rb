@@ -21,10 +21,12 @@ RSpec.describe Device, :type => :model do
 
     expect(d.user).not_to eq nil
 
-    new_user = create(:user)
+    new_user = create(:user_without_device)
     d.user = new_user
     d.save!
 
     expect(d.user.id).to eq new_user.id
+    expect(new_user.devices.count).to eq 1
+    expect(new_user.devices.first.id).to eq d.id
   end
 end

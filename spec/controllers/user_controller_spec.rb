@@ -87,14 +87,17 @@ RSpec.describe UserController, type: :controller do
     initial_device = create(:device_with_user, username: username, password: password)
     new_device = create(:device)
 
+    expect(initial_device.user.devices.count).to eq 1
+
     request.headers[:HTTP_DEVICE_ID] = new_device.device_id
     post :login, params: {:email_or_username => username, password: password}
 
     new_device.reload
 
     expect(response.status).to eq 200
-    expect(initial_device.user.username).to eq new_device.user.username
-    expect(initial_device.user.id).to       eq new_device.user.id
+    expect(initial_device.user.username).to           eq new_device.user.username
+    expect(initial_device.user.id).to                 eq new_device.user.id
+    expect(initial_device.user.devices.count).to      eq 2
   end
 
   it "logs a valid email and password in" do
@@ -111,6 +114,28 @@ RSpec.describe UserController, type: :controller do
     expect(response.status).to eq 200
     expect(initial_device.user.username).to eq new_device.user.username
     expect(initial_device.user.id).to       eq new_device.user.id
+  end
+
+  it "logs in users who have no devices" do
+    username = 'test'
+    password = 'Password123'
+    user = create(:user_without_device,
+                  username: username,
+                  email: 'test@test.com',
+                  password: password)
+    new_device = create(:device)
+
+    expect(user.devices.count).to eq 0
+
+    request.headers[:HTTP_DEVICE_ID] = new_device.device_id
+    post :login, params: {email_or_username: username, password: password}
+
+    new_device.reload
+
+    expect(response.status).to eq 200
+    expect(new_device.user.username).to           eq user.username
+    expect(new_device.user.id).to                 eq user.id
+    expect(new_device.user.devices.count).to  eq 1
   end
 
   it "does allow users to login if they're already logged in" do
