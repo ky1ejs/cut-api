@@ -80,7 +80,7 @@ class UserController < ApplicationController
 
       old_user.destroy!
 
-      render status: 200
+      render json: new_user
     else
       render status: 422
     end
