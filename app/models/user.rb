@@ -32,33 +32,24 @@ class User < ApplicationRecord
     full_user_fields.all? { |e| !e.nil?  }
   end
 
-  def as_json(options = {})
-    options[:except] ||= [:hashed_password, :salt, :salt]
-    json = super(options)
-
-    if !self.email.nil?
-      gravatar = "https://www.gravatar.com/avatar/"
-      email_hash = Digest::MD5.hexdigest(self.email)
-      query = '?d=404'
-      profile_image_url = "#{gravatar}#{email_hash}#{query}"
-      begin
-        response = HTTParty.get profile_image_url
-      rescue
-      end
-
-      json['profile_image'] = profile_image_url if response != nil && response.code == 200
-    end
-
-    json['is_full_user'] = is_full_user
-    json['follower_count'] = self.followers.count
-    json['following_count'] = self.following.count
-
-    json
-  end
-
   def check_password(password)
     hashed_password = BCrypt::Engine.hash_secret(password, self.salt)
     return self.hashed_password == hashed_password
+  end
+
+  def profile_image_url
+    return if self.email == nil
+
+    gravatar = "https://www.gravatar.com/avatar/"
+    email_hash = Digest::MD5.hexdigest(self.email)
+    query = '?d=404'
+    profile_image_url = "#{gravatar}#{email_hash}#{query}"
+    begin
+      response = HTTParty.get profile_image_url
+    rescue
+    end
+
+    profile_image_url if response != nil && response.code == 200
   end
 
   attr_accessor :password

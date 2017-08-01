@@ -8,7 +8,7 @@ RSpec.describe User, :type => :model do
 
     stub_request(:get, gravatar_url).to_return(status: 200)
 
-    expect(u.as_json['profile_image']).to eq gravatar_url
+    expect(u.profile_image_url).to eq gravatar_url
   end
 
   it "handles case where user does not have gravatar" do
@@ -18,7 +18,7 @@ RSpec.describe User, :type => :model do
 
     stub_request(:get, gravatar_url).to_return(status: 404)
 
-    expect(u.as_json['profile_image']).to eq nil
+    expect(u.profile_image_url).to eq nil
   end
 
   it "should encrypt the user's password" do
@@ -62,33 +62,6 @@ RSpec.describe User, :type => :model do
     expect(u.last_seen).to eq last_seen
 
     u.destroy!
-  end
-
-  it "should never return the users password in json" do
-    u = create(:full_user)
-    hashed_email = Digest::MD5.hexdigest(u.email)
-    gravatar_url = "https://www.gravatar.com/avatar/#{hashed_email}?d=404"
-    stub_request(:get, gravatar_url).to_return(status: 404)
-
-    json = u.as_json
-    expect(json.keys.include? 'hashed_password').to eq false
-    expect(json.keys.include? 'salt').to eq false
-    expect(json.keys.include? 'password').to eq false
-  end
-
-  it "serialises how following and followers count" do
-    u = create(:full_user)
-
-    (0..2).each do
-      user = create(:full_user)
-      u.followers.push user
-      u.following.push user
-    end
-
-    json = u.as_json
-
-    expect(json['following_count']).to eq 3
-    expect(json['follower_count']).to eq 3
   end
 
   it "adds followers via the 'followers' attribute" do

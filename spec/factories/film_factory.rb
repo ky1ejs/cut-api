@@ -1,5 +1,9 @@
 FactoryGirl.define do
   factory :film do
+    theater_release_date  Date.today
+    running_time          100
+    synopsis              "Best film ever"
+
     sequence :title do |n|
       "Test Film #{n}"
     end

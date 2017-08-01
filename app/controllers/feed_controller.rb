@@ -4,6 +4,6 @@ class FeedController < ApplicationController
     watches = user.following.map(&:watch_list_records)
     watches = watches.flatten
     watches = watches.sort_by(&:created_at)
-    render json: watches.as_json(include: [:film, :user])
+    render json: watches
   end
 end
