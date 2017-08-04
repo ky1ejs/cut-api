@@ -28,7 +28,7 @@ Rails.application.routes.draw do
     scope '/films' do
       get '/' => 'film#index'
       scope '/:film_id' do
-        post '/rate' => 'rating#rate_film'
+        post '/rate' => 'watch#create_watch'
       end
     end
 
@@ -57,8 +57,8 @@ Rails.application.routes.draw do
     # Managing Other Users
     scope '/users/:username' do
       get     '/'  => 'user#get_user'
-      post    '/' => 'user#follow_unfollow_user'
-      delete  '/' => 'user#follow_unfollow_user'
+      post    '/'  => 'user#follow_unfollow_user'
+      delete  '/'  => 'user#follow_unfollow_user'
     end
 
     scope '/feed' do
