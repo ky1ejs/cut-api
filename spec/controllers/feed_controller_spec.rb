@@ -19,9 +19,10 @@ RSpec.describe FeedController, type: :controller do
     u.following = [following1, following2]
 
     d = u.devices.first
-    request.headers[:HTTP_DEVICE_ID] = "#{d.platform}_#{d.id}"
+    request.headers[:HTTP_DEVICE_ID] = d.device_id
     get :index
 
-    expect(watches.to_json(include: [:film, :user])).to eq response.body
+    expected_json = watches.map { |w| WatchSerializer.new(w).serializable_hash }
+    expect(expected_json.to_json).to eq response.body
   end
 end

@@ -3,13 +3,28 @@ Rails.application.routes.draw do
 
   scope '/v1' do
 
+    ######################################################
+    # Authenticated user
+    get   '/' => 'user#get_current_user'
+
     scope '/devices' do
-      scope '/token' do
-        post '/' => 'device#set_push_token'
-        delete '/' => 'device#remove_push_token'
+      scope '/push-token' do
+        post    '/' => 'device#set_push_token'
+        delete  '/' => 'device#remove_push_token'
       end
     end
 
+    scope '/login' do
+      post    '/' => 'user#login'
+    end
+
+    scope '/sign-up' do
+      post  '/' => 'user#create_login'
+    end
+    ######################################################
+
+    ######################################################
+    # Managing Films
     scope '/films' do
       get '/' => 'film#index'
       scope '/:film_id' do
@@ -18,37 +33,38 @@ Rails.application.routes.draw do
     end
 
     scope '/ratings' do
-      get '/' => 'rating#index'
-      post '/' => 'rating#rate_film'
-      post '/' => 'rating#delete_rating'
-    end
-
-    scope '/search' do
-      get '/' => 'search#search'
-    end
-
-    scope '/users' do
-      get '/' => 'user#get_current_user'
-      scope '/login' do
-        post '/' => 'user#login'
-      end
-      scope '/:username' do
-        get     '/'  => 'user#get_user'
-        post    '/' => 'user#follow_unfollow_user'
-        delete  '/' => 'user#follow_unfollow_user'
-      end
-      post '/' => 'user#create_login'
+      get     '/' => 'watch#index_ratings'
     end
 
     scope '/watch-list' do
-      get '/' => 'want_to_watch#index'
-      post '/' => 'want_to_watch#add_film_to_watch_list'
-      delete '/' => 'want_to_watch#delete_film_from_watch_list'
+      get     '/' => 'watch#index_watch_list'
+    end
+
+    scope '/watch-list', '/ratings' do
+      post    '/' => 'watch#create_watch'
+      delete  '/' => 'watch#delete_watch'
+    end
+    ######################################################
+
+    ######################################################
+    # Searching
+    scope '/search' do
+      get '/' => 'search#search'
+    end
+    ######################################################
+
+    ######################################################
+    # Managing Other Users
+    scope '/users/:username' do
+      get     '/'  => 'user#get_user'
+      post    '/' => 'user#follow_unfollow_user'
+      delete  '/' => 'user#follow_unfollow_user'
     end
 
     scope '/feed' do
       get '/' => 'feed#index'
     end
+    ######################################################
 
   end
 
