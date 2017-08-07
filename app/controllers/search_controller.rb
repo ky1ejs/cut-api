@@ -1,24 +1,19 @@
 class SearchController < ApplicationController
   def search
     user_results = User.where "username LIKE ?", "%#{params[:term]}%"
-    user_results_json = user_results.as_json
+    user_results_json = user_results.map { |u| UserSerializer.new(u).serializable_hash }
 
-    i = 0
     following_user_ids = device.user.following.map { |user| user.id }
-    while i < user_results_json.count  do
-      user_results_json[i]['following'] = following_user_ids.include? user_results_json[i]['id']
-      i +=1
+    user_results_json.each do |u|
+      u[:following] = following_user_ids.include? u[:id]
     end
 
     film_results = Film.where "title LIKE ?", "%#{params[:term]}%"
-
-    if film_results.count == 0
-      film_results = FlixsterController.new.search(params[:term])
-    end
+    film_results = FlixsterController.new.search(params[:term]) if film_results.count <= 3
 
     json = {
-      'users' => user_results_json,
-      'films' => film_results.as_json(include: :posters)
+      :users => user_results_json,
+      :films => film_results.map { |f| FilmSerializer.new(f).serializable_hash }
     }
 
     render json: json
