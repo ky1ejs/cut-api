@@ -9,7 +9,7 @@ class SearchController < ApplicationController
     end
 
     film_results = Film.where "title LIKE ?", "%#{params[:term]}%"
-    film_results = FlixsterController.new.search(params[:term]) if film_results.count <= 3
+    film_results = FlixsterController.new.search(params[:term]) if film_results.count < 1 || params[:search_all_providers] == true
 
     json = {
       :users => user_results_json,
