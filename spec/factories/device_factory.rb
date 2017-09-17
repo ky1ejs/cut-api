@@ -6,7 +6,7 @@ FactoryGirl.define do
       push_token "1231232132132132131232132"
     end
 
-    factory :device_with_user do
+    factory :device_with_full_user do
       transient do
         email    "test@test.com"
         username "test"

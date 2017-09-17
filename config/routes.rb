@@ -18,8 +18,12 @@ Rails.application.routes.draw do
       post    '/' => 'user#login'
     end
 
+    scope '/logout' do
+      post    '/' => 'user#logout'
+    end
+
     scope '/sign-up' do
-      post  '/' => 'user#create_login'
+      post    '/' => 'user#create_login'
     end
     ######################################################
 

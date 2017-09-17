@@ -84,7 +84,7 @@ RSpec.describe UserController, type: :controller do
   it "logs a valid username and password in" do
     username = 'test'
     password = 'Password123'
-    initial_device = create(:device_with_user, username: username, password: password)
+    initial_device = create(:device_with_full_user, username: username, password: password)
     new_device = create(:device)
 
     expect(initial_device.user.devices.count).to eq 1
@@ -103,7 +103,7 @@ RSpec.describe UserController, type: :controller do
   it "logs a valid email and password in" do
     email = 'test@test.com'
     password = 'Password123'
-    initial_device = create(:device_with_user, email: email, password: password)
+    initial_device = create(:device_with_full_user, email: email, password: password)
     new_device = create(:device)
 
     request.headers[:HTTP_DEVICE_ID] = new_device.device_id
@@ -141,7 +141,7 @@ RSpec.describe UserController, type: :controller do
   it "does allow users to login if they're already logged in" do
     username = 'test'
     password = 'Password123'
-    initial_device = create(:device_with_user, username: username,password: password)
+    initial_device = create(:device_with_full_user, username: username, password: password)
     new_device = create(:device, user: create(:full_user))
 
     request.headers[:HTTP_DEVICE_ID] = new_device.device_id
@@ -156,7 +156,7 @@ RSpec.describe UserController, type: :controller do
 
   it "merges watch lists when a user successfully logs in" do
     password = "Password123"
-    initial_device = create(:device_with_user, password: password)
+    initial_device = create(:device_with_full_user, password: password)
     new_device = create(:device)
 
     existing_watches = [
@@ -185,7 +185,7 @@ RSpec.describe UserController, type: :controller do
 
   it "favours the logging in user's watches over the current device's user's watches" do
     password = "Password123"
-    initial_device = create(:device_with_user, password: password)
+    initial_device = create(:device_with_full_user, password: password)
     new_device = create(:device)
 
     film_1 = create(:film)
@@ -209,5 +209,27 @@ RSpec.describe UserController, type: :controller do
     expect(initial_device.user.id).to       eq new_device.user.id
     expect(initial_device.user.watch_list_records[0].rating).to eq 5
     expect(initial_device.user.watch_list_records[1].rating).to eq nil
+  end
+
+  it "logs full-users out" do
+    d = create(:device_with_full_user)
+    old_user = d.user
+
+    request.headers[:HTTP_DEVICE_ID] = d.device_id
+    post :logout
+
+    d.reload
+
+    expect(old_user.devices.count).to eq 0
+    expect(old_user.id).not_to eq d.user.id
+  end
+
+  it "does not log non-full-users out" do
+    d = create(:device)
+
+    request.headers[:HTTP_DEVICE_ID] = d.device_id
+    post :logout
+
+    expect(response.status).to eq 422
   end
 end

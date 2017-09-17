@@ -85,4 +85,16 @@ class UserController < ApplicationController
       render status: 422
     end
   end
+
+  def logout
+    if !device.user.is_full_user
+      render status: 422
+      return
+    end
+
+    device.user = User.new
+    device.save!
+
+    render status: 200
+  end
 end
