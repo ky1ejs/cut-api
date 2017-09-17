@@ -95,6 +95,6 @@ class UserController < ApplicationController
     device.user = User.new
     device.save!
 
-    render status: 200
+    render json: device.user
   end
 end
