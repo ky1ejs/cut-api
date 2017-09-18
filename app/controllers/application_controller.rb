@@ -2,6 +2,8 @@ class ApplicationController < ActionController::API
   def device
     device_id = request.headers[:HTTP_DEVICE_ID]
 
+    # TODO somehow render 422 when device isn't passed and return from all calling functions
+
     return @device if @device&.device_id&.downcase == device_id.downcase
 
     regex = /^(?<platform>[a-z]*)_(?<id>[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})$/i

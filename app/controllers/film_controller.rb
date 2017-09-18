@@ -8,7 +8,6 @@ class FilmController < ApplicationController
       rating = Watch.where(rating: 3.5..5.0).order(updated_at: :desc).limit(100)
       films = rating.map { |r| r.film  }
     when "new-store-releases"
-      # todo
       films = Film.where(theater_release_date: 30.days.ago..(DateTime.now + 5.days)).limit(100)
     when "top-rated-all-time"
       rating = Watch.order(updated_at: :desc).limit(100)
