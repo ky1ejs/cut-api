@@ -3,7 +3,7 @@ require 'base64'
 class NotificationService
   CONN_POOL = Apnotic::ConnectionPool.new(
     auth_method:    :token,
-    cert:          Base64.decode64 ENV['APNS_TOKEN'],
+    cert:          Base64.decode64(ENV['APNS_TOKEN']),
     key_id:        ENV['APNS_KEY_ID'],
     team_id:       ENV['APNS_TEAM_ID']
   )
