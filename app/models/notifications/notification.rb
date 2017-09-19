@@ -4,22 +4,16 @@ class Notification < ApplicationRecord
   def save
     is_new = new_record?
     return unless super
-    send if is_new
+    Rails.logger.debug NotificationService.send(self) if is_new
   end
 
   def save!
     is_new = new_record?
     return unless super
-    send if is_new
+    Rails.logger.debug NotificationService.send(self) if is_new
   end
 
   def sent
     external_id.nil?
-  end
-
-  private
-
-  def send
-    Rails.logger.debug NotificationService.publish(self)
   end
 end

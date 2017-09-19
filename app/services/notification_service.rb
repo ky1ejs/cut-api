@@ -8,7 +8,7 @@ class NotificationService
 
   def self.send(notification)
     notification.user.devices.each do |d|
-      next if d.token.nil?
+      next if d.push_token.nil?
 
       CONN_POOL.with do |conn|
         apns_notification       = Apnotic::Notification.new(token)
