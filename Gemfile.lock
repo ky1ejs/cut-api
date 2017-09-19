@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/kylejm/apnotic.git
-  revision: db199e72111c57c50dd2036b724cad320239cb66
+  revision: 11142771d59a5b3572685c0f82ed3379344dfa7a
   branch: init-with-data
   specs:
     apnotic (1.2.0)
