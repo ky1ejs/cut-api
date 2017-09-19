@@ -9,8 +9,6 @@ end
 gem 'httparty'
 # For password encryption
 gem 'bcrypt'
-# RabbitMQ
-gem 'bunny'
 # Serialization
 gem 'active_model_serializers'
 
@@ -20,15 +18,11 @@ gem 'rails', '~> 5.0.2'
 gem 'pg'
 # Use Puma as the app server
 gem 'puma', '~> 3.0'
-
-# Use Capistrano for deployment
-# gem 'capistrano-rails', group: :development
+# Push Notifications
+gem 'apnotic', :git => 'https://github.com/kylejm/apnotic.git', :branch => 'init-with-data'
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
 # gem 'rack-cors'
-
-# Cron jobs
-gem 'whenever', :require => false
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -40,8 +34,6 @@ group :development, :test do
   gem "factory_girl_rails", "~> 4.0"
 
   gem "webmock"
-
-  gem 'whenever-test'
 
   gem 'codecov', :require => false
 end

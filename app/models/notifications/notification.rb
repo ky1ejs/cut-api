@@ -3,17 +3,23 @@ class Notification < ApplicationRecord
 
   def save
     is_new = new_record?
-    return if !super
-    if is_new
-      user.devices.each { |d| Rails.logger.debug NotificationService.publish(message, d) }
-    end
+    return unless super
+    send if is_new
   end
 
   def save!
     is_new = new_record?
-    return if !super
-    if is_new
-      user.devices.each { |d| Rails.logger.debug NotificationService.publish(message, d) }
-    end
+    return unless super
+    send if is_new
+  end
+
+  def sent
+    external_id.nil?
+  end
+
+  private
+
+  def send
+    Rails.logger.debug NotificationService.publish(self)
   end
 end

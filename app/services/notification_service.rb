@@ -1,34 +1,26 @@
 class NotificationService
-  def self.publish(message, device)
-    return if device.push_token.nil?
+  CONN_POOL = Apnotic::ConnectionPool.new(
+    auth_method: :token,
+    cert:          ENV['APNS_TOKEN'],
+    key_id:        ENV['APNS_KEY_ID'],
+    team_id:       ENV['APNS_TEAM_ID']
+  )
 
-    payload = {
-      'message' => message,
-      'is_dev_token' => device.is_dev_device,
-      'token' => device.push_token
-    }
+  def self.send(notification)
+    notification.user.devices.each do |d|
+      next if d.token.nil?
 
-    Rails.logger.debug payload
+      CONN_POOL.with do |conn|
+        apns_notification       = Apnotic::Notification.new(token)
+        apns_notification.alert = notification.message
+        apns_notification.sound = 'default'
 
-    exchange = channel.fanout('notification.exchange', durable: true)
-    Rails.logger.debug exchange.publish(payload.to_json)
-  end
+        response = conn.push(apns_notification)
+        return if response.nil? || response['apns-id'].nil?
 
-  def self.channel
-    @channel ||= connection.create_channel
-  end
-
-  def self.connection
-    @connection ||= Bunny.new({
-      :host      => RABBIT_CONFIG['host'],
-      :port      => 5672,
-      :ssl       => false,
-      :vhost     => "/",
-      :user      => RABBIT_CONFIG['user'],
-      :pass      => RABBIT_CONFIG['password'],
-      :heartbeat => :server, # will use RabbitMQ setting
-      :frame_max => 131072,
-      :auth_mechanism => "PLAIN"
-    }).tap { |c| c.start }
+        notification.external_id = response['apns-id']
+        notification.save!
+      end
+    end
   end
 end

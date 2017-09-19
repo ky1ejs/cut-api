@@ -3,10 +3,10 @@ class CreateNotifications < ActiveRecord::Migration[5.0]
     enable_extension 'uuid-ossp'
 
     create_table :notifications, id: :uuid do |t|
-      t.uuid        :user_id, null: false
-      t.string      :type,    null: false
-      t.boolean     :read,    null: false, default: false
-      t.timestamps            null: false
+      t.uuid        :user_id,     null: false
+      t.string      :type,        null: false
+      t.boolean     :seen,        null: false, default: false
+      t.string      :external_id
 
       # NewFilmRatingNotification
       t.uuid        :rating_id
@@ -16,6 +16,8 @@ class CreateNotifications < ActiveRecord::Migration[5.0]
 
       # NewFollowedUserFilmRatingNotification
       t.uuid        :watch_id
+
+      t.timestamps  null: false
     end
 
     add_foreign_key :notifications, :users,     column: :user_id,     on_delete: :cascade
