@@ -11,7 +11,7 @@ class NotificationService
       next if d.push_token.nil?
 
       CONN_POOL.with do |conn|
-        apns_notification       = Apnotic::Notification.new(token)
+        apns_notification       = Apnotic::Notification.new(d.push_token)
         apns_notification.alert = notification.message
         apns_notification.sound = 'default'
 
