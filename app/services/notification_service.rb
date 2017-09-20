@@ -8,7 +8,7 @@ class NotificationService
     team_id:       ENV['APNS_TEAM_ID']
   )
 
-  def self.send(notification)
+  def self.send_notification(notification)
     notification.user.devices.each do |d|
       next if d.push_token.nil?
 
@@ -23,6 +23,17 @@ class NotificationService
         notification.external_id = response['apns-id']
         notification.save!
       end
+    end
+  end
+
+  def self.send_message(message, push_token)
+    return if message.nil? || push_token.nil?
+
+    CONN_POOL.with do |conn|
+      apns_notification       = Apnotic::Notification.new(push_token)
+      apns_notification.alert = message
+      apns_notification.sound = 'default'
+      conn.push(apns_notification)
     end
   end
 end

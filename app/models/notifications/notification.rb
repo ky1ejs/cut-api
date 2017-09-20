@@ -4,13 +4,13 @@ class Notification < ApplicationRecord
   def save
     is_new = new_record?
     return unless super
-    Rails.logger.debug NotificationService.send(self) if is_new
+    Rails.logger.debug NotificationService.send_notification(self) if is_new
   end
 
   def save!
     is_new = new_record?
     return unless super
-    Rails.logger.debug NotificationService.send(self) if is_new
+    Rails.logger.debug NotificationService.send_notification(self) if is_new
   end
 
   def sent
