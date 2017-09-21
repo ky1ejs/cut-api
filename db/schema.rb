@@ -18,14 +18,14 @@ ActiveRecord::Schema.define(version: 20170523190543) do
   enable_extension "uuid-ossp"
 
   create_table "devices", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
-    t.uuid     "user_id",                       null: false
+    t.uuid     "user_id",    null: false
     t.citext   "name"
-    t.integer  "platform",                      null: false
-    t.datetime "last_seen",                     null: false
+    t.integer  "platform",   null: false
+    t.datetime "last_seen",  null: false
+    t.string   "app_id"
     t.string   "push_token"
-    t.boolean  "is_dev_device", default: false, null: false
-    t.datetime "created_at",                    null: false
-    t.datetime "updated_at",                    null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "film_providers", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
@@ -56,14 +56,15 @@ ActiveRecord::Schema.define(version: 20170523190543) do
   end
 
   create_table "notifications", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
-    t.uuid     "user_id",                    null: false
-    t.string   "type",                       null: false
-    t.boolean  "read",       default: false, null: false
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
+    t.uuid     "user_id",                     null: false
+    t.string   "type",                        null: false
+    t.boolean  "seen",        default: false, null: false
+    t.string   "external_id"
     t.uuid     "rating_id"
     t.uuid     "follow_id"
     t.uuid     "watch_id"
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
   end
 
   create_table "posters", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|

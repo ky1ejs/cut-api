@@ -1,6 +1,7 @@
 FactoryGirl.define do
   factory :device do
     platform :ios
+    app_id 'watch.cut'
 
     factory :device_with_push_token do
       push_token "1231232132132132131232132"

@@ -8,8 +8,8 @@ class CreateDevices < ActiveRecord::Migration[5.0]
       t.citext    :name
       t.integer   :platform,      null: false
       t.datetime  :last_seen,     null: false
+      t.string    :app_id
       t.string    :push_token
-      t.boolean   :is_dev_device, null: false, default: false
 
       t.timestamps                null: false
     end

@@ -5,8 +5,6 @@ RSpec.describe ApplicationController, :type => :controller do
     platform = 'ios'
     uuid = '2a2096ff-ed6c-450d-bdb4-98757793fdeb'
 
-    # expect(Device.find(uuid).nil?).to eq true
-
     @request.env['HTTP_DEVICE_ID'] = "#{platform}_#{uuid}"
 
     d = subject.device
@@ -14,8 +12,22 @@ RSpec.describe ApplicationController, :type => :controller do
     expect(d.id).to eq uuid
     expect(d.platform).to eq platform
     expect(d.new_record?).to eq false
+  end
 
-    d.destroy!
+  it 'saves the passed App ID' do
+    platform = 'ios'
+    uuid = '2a2096ff-ed6c-450d-bdb4-98757793fdeb'
+    app_id = 'cut.watch'
+
+    @request.env['HTTP_DEVICE_ID'] = "#{platform}_#{uuid}"
+    @request.env['HTTP_APP_ID'] = app_id
+
+    d = subject.device
+
+    expect(d.id).to eq uuid
+    expect(d.platform).to eq platform
+    expect(d.app_id).to eq app_id
+    expect(d.new_record?).to eq false
   end
 
   it 'doesn\'t persist devices across calls' do

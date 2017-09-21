@@ -12,28 +12,34 @@ class NotificationService
     notification.user.devices.each do |d|
       next if d.push_token.nil?
 
-      CONN_POOL.with do |conn|
-        apns_notification       = Apnotic::Notification.new(d.push_token)
-        apns_notification.alert = notification.message
-        apns_notification.sound = 'default'
+      if d.platform == :ios
+        CONN_POOL.with do |conn|
+          apns_notification       = Apnotic::Notification.new(d.push_token)
+          apns_notification.alert = notification.message
+          apns_notification.sound = 'default'
+          apns_notification.topic = d.app_id || 'watch.cut'
 
-        response = conn.push(apns_notification)
-        return if response.nil? || response['apns-id'].nil?
+          response = conn.push(apns_notification)
+          return if response.nil? || response['apns-id'].nil?
 
-        notification.external_id = response['apns-id']
-        notification.save!
+          notification.external_id = response['apns-id']
+          notification.save!
+        end
       end
     end
   end
 
-  def self.send_message(message, push_token)
-    return if message.nil? || push_token.nil?
+  def self.send_message(message, device)
+    return if message.nil? || device.push_token.nil?
 
-    CONN_POOL.with do |conn|
-      apns_notification       = Apnotic::Notification.new(push_token)
-      apns_notification.alert = message
-      apns_notification.sound = 'default'
-      conn.push(apns_notification)
+    if device.platform == :ios
+      CONN_POOL.with do |conn|
+        apns_notification       = Apnotic::Notification.new(push_token)
+        apns_notification.alert = message
+        apns_notification.sound = 'default'
+        apns_notification.topic = device.app_id || 'watch.cut'
+        conn.push(apns_notification)
+      end
     end
   end
 end
