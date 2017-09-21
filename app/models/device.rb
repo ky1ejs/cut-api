@@ -8,6 +8,7 @@ class Device < ApplicationRecord
   end
 
   before_validation :set_initial_last_seen, :set_initial_user, on: :create
+  before_save       :downcase_id
 
   protected
 
@@ -17,5 +18,9 @@ class Device < ApplicationRecord
 
   def set_initial_user
     self.user ||= User.new
+  end
+
+  def downcase_id
+    self.id = self.id&.downcase
   end
 end

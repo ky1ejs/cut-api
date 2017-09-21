@@ -29,4 +29,14 @@ RSpec.describe Device, :type => :model do
     expect(new_user.devices.count).to eq 1
     expect(new_user.devices.first.id).to eq d.id
   end
+
+  it 'should not save with an uppercase id' do
+    id = '46b332e9-d300-4fcb-9ef6-9bb7a5dcd208'
+    d = create(:device, id: id.upcase)
+    expect(d.id).to eq id
+
+    d.id = id.upcase
+    d.save!
+    expect(d.id).to eq id
+  end
 end
