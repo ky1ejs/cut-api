@@ -1,19 +1,22 @@
 require 'base64'
 
 class NotificationService
-  CONN_POOL = Apnotic::ConnectionPool.new(
-    auth_method:    :token,
-    cert:          Base64.decode64(ENV['APNS_TOKEN'] || ""),
-    key_id:        ENV['APNS_KEY_ID'],
-    team_id:       ENV['APNS_TEAM_ID']
-  )
+  CONN_OPTIONS = {
+      auth_method: :token,
+      cert:  Base64.decode64(ENV['APNS_TOKEN'] || ""),
+      key_id: ENV['APNS_KEY_ID'],
+      team_id: ENV['APNS_TEAM_ID']
+  }.freeze
+  PROD_POOL = Apnotic::ConnectionPool.new CONN_OPTIONS
+  DEV_POOL = Apnotic::ConnectionPool.development CONN_OPTIONS
 
   def self.send_notification(notification)
     notification.user.devices.each do |d|
       next if d.push_token.nil?
 
       if d.platform == :ios
-        CONN_POOL.with do |conn|
+        pool = d.is_dev_device ? DEV_POOL : PROD_POOL
+        pool .with do |conn|
           apns_notification       = Apnotic::Notification.new(d.push_token)
           apns_notification.alert = notification.message
           apns_notification.sound = 'default'
@@ -33,7 +36,8 @@ class NotificationService
     return if message.nil? || device.push_token.nil?
 
     if device.platform == :ios
-      CONN_POOL.with do |conn|
+      pool = d.is_dev_device ? DEV_POOL : PROD_POOL
+      pool.with do |conn|
         apns_notification       = Apnotic::Notification.new(device.push_token)
         apns_notification.alert = message
         apns_notification.sound = 'default'

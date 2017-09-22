@@ -11,6 +11,7 @@ class ApplicationController < ActionController::API
 
     @device = Device.find_or_create_by(id: device_id[:id].downcase, platform: device_id[:platform].downcase)
     @device.app_id = request.headers[:HTTP_APP_ID]
+    @device.is_dev_device = request.headers[:HTTP_IS_DEV_DEVICE] == 'true'
     @device.save!
 
     @device.user.last_seen = Time.now
