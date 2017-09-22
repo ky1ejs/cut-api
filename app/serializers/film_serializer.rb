@@ -5,7 +5,8 @@ class FilmSerializer < ActiveModel::Serializer
               :relative_theater_release_date,
               :theater_release_date,
               :running_time,
-              :synopsis
+              :synopsis,
+              :ratings
 
   def posters
     return if object.posters.count == 0
@@ -56,5 +57,7 @@ class FilmSerializer < ActiveModel::Serializer
     object.theater_release_date.relative_time_string if object.theater_release_date != nil
   end
 
-
+  def ratings
+    object.ratings.each { |r| RatingSerializer.new(r).serializable_hash }
+  end
 end
