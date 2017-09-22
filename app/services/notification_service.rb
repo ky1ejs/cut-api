@@ -34,7 +34,7 @@ class NotificationService
 
     if device.platform == :ios
       CONN_POOL.with do |conn|
-        apns_notification       = Apnotic::Notification.new(push_token)
+        apns_notification       = Apnotic::Notification.new(device.push_token)
         apns_notification.alert = message
         apns_notification.sound = 'default'
         apns_notification.topic = device.app_id || 'watch.cut'
