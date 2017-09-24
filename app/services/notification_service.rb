@@ -10,14 +10,14 @@ class NotificationService
     }
   end
 
-  PROD_POOL = Apnotic::ConnectionPool.development connection_options
-  DEV_POOL = Apnotic::ConnectionPool.new connection_options
+  PROD_POOL = Apnotic::ConnectionPool.new connection_options
+  DEV_POOL = Apnotic::ConnectionPool.development connection_options
 
-  def self.send_notification(notification)
+  def self.send_notification(notification, device)
     notification.user.devices.each do |d|
       next if d.push_token.nil?
 
-      if d.platform == :ios
+      if d.platform == 'ios'
         pool = d.is_dev_device ? DEV_POOL : PROD_POOL
         pool.with do |conn|
           apns_notification       = Apnotic::Notification.new(d.push_token)
@@ -40,15 +40,22 @@ class NotificationService
         end
         notification.push_status = :queued
         notification.save!
+
+        return
       end
+
+      notification.push_status = :failed
+      notification.push_response = 'Unsupported platform for notifications'
+      notification.save!
+      raise notification.push_response
     end
   end
 
   def self.send_message(message, device)
     return if message.nil? || device.push_token.nil?
 
-    if device.platform == :ios
-      pool = d.is_dev_device ? DEV_POOL : PROD_POOL
+    if device.platform == 'ios'
+      pool = device.is_dev_device ? DEV_POOL : PROD_POOL
       pool.with do |conn|
         apns_notification       = Apnotic::Notification.new(device.push_token)
         apns_notification.alert = message
@@ -56,6 +63,10 @@ class NotificationService
         apns_notification.topic = device.app_id || 'watch.cut'
         conn.push(apns_notification)
       end
+
+      return
     end
+
+    raise 'Unsupported platform for notifications'
   end
 end
