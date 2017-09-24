@@ -13,7 +13,7 @@ class NotificationService
   PROD_POOL = Apnotic::ConnectionPool.new connection_options
   DEV_POOL = Apnotic::ConnectionPool.development connection_options
 
-  def self.send_notification(notification, device)
+  def self.send_notification(notification)
     notification.user.devices.each do |d|
       next if d.push_token.nil?
 
