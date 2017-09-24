@@ -1,4 +1,5 @@
 class Notification < ApplicationRecord
+  enum status: [ :queued, :sent, :failed ]
   belongs_to :user
 
   def save

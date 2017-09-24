@@ -6,7 +6,10 @@ class CreateNotifications < ActiveRecord::Migration[5.0]
       t.uuid        :user_id,     null: false
       t.string      :type,        null: false
       t.boolean     :seen,        null: false, default: false
-      t.string      :external_id
+      t.string      :push_id
+      t.integer     :push_status
+      t.string      :push_status_code
+      t.string      :push_response
 
       # NewFilmRatingNotification
       t.uuid        :rating_id
