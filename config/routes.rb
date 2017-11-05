@@ -44,9 +44,15 @@ Rails.application.routes.draw do
       get     '/' => 'watch#index_watch_list'
     end
 
-    scope '/watch-list', '/ratings' do
+    concern :watch do
       post    '/' => 'watch#create_watch'
       delete  '/' => 'watch#delete_watch'
+    end
+    scope '/watch-list' do
+      concerns :watch
+    end
+    scope '/ratings'   do
+      concerns :watch
     end
     ######################################################
 
