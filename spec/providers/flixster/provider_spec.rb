@@ -52,6 +52,8 @@ RSpec.describe Flixster::Provider, :type => :class do
     expect(f.ratings[1].count).to eq flixster_num_of_scores
     expect(f.ratings[1].source).to eq :flixster_users.to_s
 
+    expect(f.trailers.count).to eq 4
+
     f.destroy
 
     expect(f.ratings.count).to eq 0

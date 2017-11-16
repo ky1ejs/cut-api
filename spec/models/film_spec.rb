@@ -60,7 +60,7 @@ RSpec.describe Film, :type => :model do
   end
 
   it "handles updated and delete posters" do
-    f = create(:film_with_posters, poster_width: 100, poster_height: 200)
+    f = create(:film, poster_width: 100, poster_height: 200)
 
     poster_width = 61
     poster_height = 91

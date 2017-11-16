@@ -29,41 +29,44 @@ module Flixster
     def self.parse_film(json)
       title = json[:title]
 
+      # Running Time
       running_time_string = json[:runningTime]
       running_time_regex = /(?<hours>\d{1}) hr\. ?(?<mins>\d{1,2})?/
       running_time_data = running_time_string.match(running_time_regex)
-
-      if !running_time_data.nil?
+      unless running_time_data.nil?
         hours = running_time_data[:hours].to_i * 60
         running_time = hours + running_time_data[:mins].to_i
       end
 
+      # Release Date
       t_release_date = json[:theaterReleaseDate]
       year = t_release_date[:year].to_i
       month = t_release_date[:month].to_i
       day = t_release_date[:day].to_i
       theater_release_date = Date.new year, month, day unless year == 0 || month == 0 || day == 0
 
+      # Create Film
       f = Film.new
       f.title = title
       f.running_time = running_time
       f.synopsis = json[:synopsis]
       f.theater_release_date = theater_release_date
 
+      # Provider
       provider = FilmProvider.new
       provider.provider = :flixster
       provider.provider_film_id = json[:id].to_s
       f.providers = [provider]
 
+      # Posters
       urls = Set.new json[:poster].values
       f.posters = urls.select { |url| url.length > 0 }.map { |url| parse_poster url }.compact
 
+      # Ratings
       reviews = json[:reviews]
-
       ratings = []
-
       r_t_score = reviews[:rottenTomatoes].try(:[], :rating)
-      if !r_t_score.nil?
+      unless r_t_score.nil?
         critic_review_count = reviews[:criticsNumReviews]
         rotten_toms_rating = Rating.new
         rotten_toms_rating.score = r_t_score / Float(100)
@@ -71,17 +74,34 @@ module Flixster
         rotten_toms_rating.source = :rotten_tomatoes
         ratings.push(rotten_toms_rating)
       end
-
       fx_user_scores = reviews[:flixster]
-      if !fx_user_scores.nil?
+      unless fx_user_scores.nil?
         fx_user_rating = Rating.new
         fx_user_rating.score = fx_user_scores[:popcornScore] / Float(100)
         fx_user_rating.count = fx_user_scores[:numScores]
         fx_user_rating.source = :flixster_users
         ratings.push(fx_user_rating)
       end
-
       f.ratings = ratings
+
+      # Posters
+      trailer_json = json[:trailer]
+      trailer_preview_image = trailer_json[:thumbnail]
+      duration = trailer_json[:duration]
+      flixster_cut__quality_map = {
+          :low => :low,
+          :med => :medium,
+          :high => :high,
+          :hd => :hd
+      }
+      f.trailers = flixster_cut__quality_map.map { |k, v|
+        t = Trailer.new
+        t.duration = duration
+        t.quality = v
+        t.url = trailer_json[k]
+        t.preview_image_url = trailer_preview_image
+        t
+      }
 
       f
     end

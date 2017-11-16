@@ -2,6 +2,7 @@ class FilmSerializer < ActiveModel::Serializer
   attributes  :id,
               :title,
               :posters,
+              :trailers,
               :relative_theater_release_date,
               :theater_release_date,
               :running_time,
@@ -53,8 +54,14 @@ class FilmSerializer < ActiveModel::Serializer
     poster_json
   end
 
+  def trailers
+    trailers = {}
+    object.trailers.each { |t| trailers[t.quality] = TrailerSerializer.new(t).serializable_hash }
+    trailers
+  end
+
   def relative_theater_release_date
-    object.theater_release_date.relative_time_string if object.theater_release_date != nil
+    object.theater_release_date.relative_time_string unless object.theater_release_date == nil
   end
 
   def ratings

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170523190543) do
+ActiveRecord::Schema.define(version: 20171113081402) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -57,15 +57,18 @@ ActiveRecord::Schema.define(version: 20170523190543) do
   end
 
   create_table "notifications", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
-    t.uuid     "user_id",                     null: false
-    t.string   "type",                        null: false
-    t.boolean  "seen",        default: false, null: false
-    t.string   "external_id"
+    t.uuid     "user_id",                          null: false
+    t.string   "type",                             null: false
+    t.boolean  "seen",             default: false, null: false
+    t.string   "push_id"
+    t.integer  "push_status"
+    t.string   "push_status_code"
+    t.string   "push_response"
     t.uuid     "rating_id"
     t.uuid     "follow_id"
     t.uuid     "watch_id"
-    t.datetime "created_at",                  null: false
-    t.datetime "updated_at",                  null: false
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
   end
 
   create_table "posters", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
@@ -87,6 +90,17 @@ ActiveRecord::Schema.define(version: 20170523190543) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["source", "film_id"], name: "index_ratings_on_source_and_film_id", unique: true, using: :btree
+  end
+
+  create_table "trailers", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
+    t.uuid     "film_id",           null: false
+    t.citext   "url",               null: false
+    t.integer  "duration",          null: false
+    t.integer  "quality",           null: false
+    t.string   "preview_image_url", null: false
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+    t.index ["quality", "film_id", "url"], name: "index_trailers_on_quality_and_film_id_and_url", unique: true, using: :btree
   end
 
   create_table "users", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
@@ -127,6 +141,7 @@ ActiveRecord::Schema.define(version: 20170523190543) do
   add_foreign_key "notifications", "watches", on_delete: :cascade
   add_foreign_key "posters", "films", on_delete: :cascade
   add_foreign_key "ratings", "films", on_delete: :cascade
+  add_foreign_key "trailers", "films", on_delete: :cascade
   add_foreign_key "watches", "films", on_delete: :cascade
   add_foreign_key "watches", "users", on_delete: :cascade
 end

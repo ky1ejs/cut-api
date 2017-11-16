@@ -8,19 +8,22 @@ FactoryGirl.define do
       "Test Film #{n}"
     end
 
-    factory :film_with_posters do
-      transient do
-        poster_width { 61 }
-        poster_height { 91 }
+    transient do
+      trailer_qualities     { [:low, :medium, :high, :hd] }
+      poster_width  { 61 }
+      poster_height { 91 }
+    end
+
+    after(:create) do |film, evaluator|
+      evaluator.trailer_qualities.each do |q|
+        create_list(:trailer, 1, quality: q, film: film)
       end
 
-      after(:create) do |film, evaluator|
-        create_list(:poster, 1,
-                    width: evaluator.poster_width,
-                    height: evaluator.poster_height,
-                    url: "http://resizing.flixster.com/rett=/#{evaluator.poster_width}x#{evaluator.poster_height}/123",
-                    film: film)
-      end
+      create_list(:poster, 1,
+                  width: evaluator.poster_width,
+                  height: evaluator.poster_height,
+                  url: "http://resizing.flixster.com/rett=/#{evaluator.poster_width}x#{evaluator.poster_height}/#{film.title}",
+                  film: film)
     end
 
     factory :flixster_film do

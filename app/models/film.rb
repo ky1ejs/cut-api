@@ -1,6 +1,7 @@
 class Film < ApplicationRecord
   has_many :ratings
   has_many :posters
+  has_many :trailers
   has_many :providers, class_name: "FilmProvider"
 
   validates :title, presence: true

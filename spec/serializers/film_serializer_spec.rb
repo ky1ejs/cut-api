@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe FilmSerializer do
   it 'correctly serializes a film' do
-    f = create(:film_with_posters)
+    f = create(:film)
 
     hash = FilmSerializer.new(f).serializable_hash
 
@@ -15,6 +15,8 @@ RSpec.describe FilmSerializer do
 
     expect(hash[:posters].count).to eq 5
     expect(hash[:posters].keys).to include "thumbnail", "smallest", "largest", "profile", "hero"
+
+    expect(hash[:trailers].keys).to include "low", "medium", "high", "hd"
 
     hash[:posters].values.each { |p|
       dimensions = [p[:width], p[:height]]

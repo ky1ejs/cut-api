@@ -24,12 +24,12 @@ FactoryGirl.define do
       :day => "07"
     }}
     trailer {{
-      "low" => "http://link.theplatform.com/s/NGweTC/media/iTHXNgNW4Lz5",
-      "med" => "http://link.theplatform.com/s/NGweTC/media/iTHXNgNW4Lz5",
-      "high" => "http://link.theplatform.com/s/NGweTC/media/iTHXNgNW4Lz5",
-      "hd" => "http://link.theplatform.com/s/NGweTC/media/iTHXNgNW4Lz5",
-      "thumbnail" => "http://resizing.flixster.com/QxyMqPE0tz_WSS8OJWwggnh_158=/171x128/v1.bjsxNDc5ODUzO2o7MTcyOTc7MjA0ODsxMDgwOzE5MjA",
-      "duration" => 151
+      :low => "http://link.theplatform.com/s/NGweTC/media/iTHXNgNW4Lz5",
+      :med => "http://link.theplatform.com/s/NGweTC/media/iTHXNgNW4Lz5",
+      :high => "http://link.theplatform.com/s/NGweTC/media/iTHXNgNW4Lz5",
+      :hd => "http://link.theplatform.com/s/NGweTC/media/iTHXNgNW4Lz5",
+      :thumbnail => "http://resizing.flixster.com/QxyMqPE0tz_WSS8OJWwggnh_158=/171x128/v1.bjsxNDc5ODUzO2o7MTcyOTc7MjA0ODsxMDgwOzE5MjA",
+      :duration => 151
     }}
     status "Live"
     playing true
