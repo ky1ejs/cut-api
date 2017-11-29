@@ -87,7 +87,6 @@ module Flixster
       # Posters
       trailer_json = json[:trailer]
       trailer_preview_image = trailer_json[:thumbnail]
-      duration = trailer_json[:duration]
       flixster_cut__quality_map = {
           :low => :low,
           :med => :medium,
@@ -96,7 +95,6 @@ module Flixster
       }
       f.trailers = flixster_cut__quality_map.map { |k, v|
         t = Trailer.new
-        t.duration = duration
         t.quality = v
         t.url = trailer_json[k]
         t.preview_image_url = trailer_preview_image

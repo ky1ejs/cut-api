@@ -1,7 +1,6 @@
 FactoryGirl.define do
   factory :trailer do
     quality :hd
-    duration 150
 
     sequence :url do |n|
       "url https://trailers.com/interstellar-#{n}.jpg"

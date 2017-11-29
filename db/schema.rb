@@ -95,7 +95,6 @@ ActiveRecord::Schema.define(version: 20171113081402) do
   create_table "trailers", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.uuid     "film_id",           null: false
     t.citext   "url",               null: false
-    t.integer  "duration",          null: false
     t.integer  "quality",           null: false
     t.string   "preview_image_url", null: false
     t.datetime "created_at",        null: false

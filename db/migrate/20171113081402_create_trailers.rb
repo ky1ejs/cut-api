@@ -6,7 +6,6 @@ class CreateTrailers < ActiveRecord::Migration[5.0]
 
       t.uuid    :film_id,           null: false
       t.citext  :url,               null: false
-      t.integer :duration,          null: false
       t.integer :quality,           null: false
       t.string  :preview_image_url, null: false
 
