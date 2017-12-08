@@ -1,0 +1,47 @@
+{
+  "name": "cut-api",
+  "description": "",
+  "scripts": {
+    "postdeploy": "rake db:migrate"
+  },
+  "env": {
+    "APNS_KEY_ID": {
+      "required": true
+    },
+    "APNS_TEAM_ID": {
+      "required": true
+    },
+    "APNS_TOKEN": {
+      "required": true
+    },
+    "LANG": {
+      "required": true
+    },
+    "RACK_ENV": {
+      "required": true
+    },
+    "RAILS_ENV": {
+      "required": true
+    },
+    "RAILS_LOG_TO_STDOUT": {
+      "required": true
+    },
+    "RAILS_SERVE_STATIC_FILES": {
+      "required": true
+    },
+    "SECRET_KEY_BASE": {
+      "required": true
+    }
+  },
+  "formation": {
+  },
+  "addons": [
+    "heroku-postgresql",
+    "scheduler"
+  ],
+  "buildpacks": [
+    {
+      "url": "heroku/ruby"
+    }
+  ]
+}
