@@ -48,8 +48,10 @@ class Film < ApplicationRecord
     end
 
 
+    # TODO - should not destroy and create if the trailers remain the same
+    self.trailers.each { |t| t.destroy! }
     self.trailers = updated_film.trailers
-    
+
     self.save!
   end
 
