@@ -27,9 +27,7 @@ class Film < ApplicationRecord
     end
 
     updated_ratings_by_source = {}
-    updated_film.ratings.each do |r|
-      updated_ratings_by_source[r.source] = r
-    end
+    updated_film.ratings.each { |r| updated_ratings_by_source[r.source] = r }
     if !self.ratings.nil?
       removed_ratings = []
       self.ratings.each do |r|
@@ -49,6 +47,9 @@ class Film < ApplicationRecord
       self.ratings = updated_film.ratings
     end
 
+
+    self.trailers = updated_film.trailers
+    
     self.save!
   end
 
