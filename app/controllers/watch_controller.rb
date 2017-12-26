@@ -4,7 +4,7 @@ class WatchController < ApplicationController
   end
 
   def index_ratings
-    render json: device.user.rated_list
+    render json: device.user.rated_list.map(&:film)
   end
 
   def create_watch
