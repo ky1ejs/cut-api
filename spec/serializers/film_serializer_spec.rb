@@ -36,6 +36,6 @@ RSpec.describe FilmSerializer do
     hash = FilmSerializer.new(film).serializable_hash
 
     expect(hash[:want_to_watch]).to eq false
-    expect(hash[:user_rating]).to eq FilmSerializer::WatchSerializer.new(watch).serializable_hash
+    expect(hash.as_json["user_rating"]).to eq FilmSerializer::WatchSerializer.new(watch).serializable_hash.as_json
   end
 end
