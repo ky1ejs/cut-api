@@ -18,26 +18,6 @@ class FilmController < ApplicationController
       films = Film.where(theater_release_date: date_range).order(theater_release_date: :desc).limit(100)
     end
 
-    films_json = films.map { |f| FilmSerializer.new(f).serializable_hash }
-
-    ratings_by_film_id = {}
-    device.user.rated_list.each { |r| ratings_by_film_id[r.film_id] = r }
-
-    want_to_watch_ids = device.user.want_to_watch_list.map { |film| film.id }
-
-    i = 0
-    while i < films_json.count  do
-      film_id = films_json[i][:id]
-
-      films_json[i]['want_to_watch'] = want_to_watch_ids.include? film_id
-
-      if ratings_by_film_id.keys.include? film_id
-        films_json[i]['user_rating'] = WatchSerializer.new(ratings_by_film_id[film_id]).serializable_hash
-      end
-
-      i += 1
-    end
-
-    render json: films_json
+    render json: films
   end
 end

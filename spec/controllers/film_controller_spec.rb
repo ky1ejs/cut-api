@@ -13,6 +13,6 @@ RSpec.describe FilmController, type: :controller do
     rating_json = json.first
     expect(json.count).to eq 1
     expect(rating_json.keys.include?("user_rating")).to eq true
-    expect(rating_json["user_rating"].to_json).to eq WatchSerializer.new(w).serializable_hash.to_json
+    expect(rating_json["user_rating"].to_json).to eq FilmSerializer::WatchSerializer.new(w).serializable_hash.to_json
   end
 end

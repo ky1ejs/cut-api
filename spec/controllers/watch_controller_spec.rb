@@ -12,14 +12,17 @@ RSpec.describe WatchController, type: :controller do
   end
 
   it "should index watch list" do
-    watch = create(:unrated_watch, user: @device.user, film: @film)
+    create(:unrated_watch, user: @device.user, film: @film)
 
+    allow_any_instance_of(FilmSerializer).to  receive(:scope).and_return(@device)
     expected_json = [FilmSerializer.new(@film).serializable_hash]
 
     request.headers[:HTTP_DEVICE_ID] = @device.device_id
     get :index_watch_list
 
+    response_json = JSON.parse response.body
     expect(response.body).to eq expected_json.to_json
+    expect(response_json .first["want_to_watch"]).to eq true
   end
 
   it "should index ratings" do

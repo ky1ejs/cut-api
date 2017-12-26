@@ -1,4 +1,6 @@
 class ApplicationController < ActionController::API
+  serialization_scope :device
+
   def device
     device_id = request.headers[:HTTP_DEVICE_ID]
 

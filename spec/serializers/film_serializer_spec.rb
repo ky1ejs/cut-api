@@ -24,4 +24,18 @@ RSpec.describe FilmSerializer do
       expect(p[:url]).not_to eq nil
     }
   end
+
+  it 'includes watch data for current user' do
+    film = create(:film)
+    device = create(:device)
+    # As current user is delegated to controller scope, we mock both here
+    allow_any_instance_of(FilmSerializer).to  receive(:scope).and_return(device)
+
+    watch = create(:watch, user: device.user, film: film, rating: 5)
+
+    hash = FilmSerializer.new(film).serializable_hash
+
+    expect(hash[:want_to_watch]).to eq false
+    expect(hash[:user_rating]).to eq FilmSerializer::WatchSerializer.new(watch).serializable_hash
+  end
 end

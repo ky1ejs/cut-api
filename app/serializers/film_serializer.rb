@@ -1,4 +1,6 @@
 class FilmSerializer < ActiveModel::Serializer
+  attribute :want_to_watch, if: -> { device != nil }
+  attribute :user_rating, if: -> { device != nil }
   attributes  :id,
               :title,
               :posters,
@@ -8,6 +10,10 @@ class FilmSerializer < ActiveModel::Serializer
               :running_time,
               :synopsis,
               :ratings
+
+  def device
+    scope if scope.instance_of? Device
+  end
 
   def posters
     return if object.posters.count == 0
@@ -66,5 +72,21 @@ class FilmSerializer < ActiveModel::Serializer
 
   def ratings
     object.ratings.each { |r| RatingSerializer.new(r).serializable_hash }
+  end
+
+  def want_to_watch
+    return if device == nil
+    device.user.want_to_watch_list.map(&:film).include? object
+  end
+
+  def user_rating
+    return if device == nil
+    return unless device.user.rated_list.map(&:film).include? object
+    watch = Watch.find_by film_id: object.id, user_id: device.user.id
+    WatchSerializer.new(watch).serializable_hash
+  end
+
+  class WatchSerializer < ActiveModel::Serializer
+    attributes :id, :rating, :comment, :created_at, :updated_at
   end
 end
