@@ -1,4 +1,4 @@
-class WatchController < ApplicationController
+class WatchController < ApiController
   def index_watch_list
     render json: device.user.want_to_watch_list.map(&:film)
   end

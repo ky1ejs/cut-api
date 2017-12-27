@@ -1,4 +1,4 @@
-class FlixsterController < ApplicationController
+class FlixsterController < ApiController
   def self.movies_url
     'https://api.flixster.com/iphone/api/v2/movies'
   end

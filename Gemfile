@@ -11,7 +11,6 @@ gem 'httparty'
 gem 'bcrypt'
 # Serialization
 gem 'active_model_serializers'
-
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.0.2'
 # Use PostgreSQL as the database for Active Record
@@ -20,9 +19,12 @@ gem 'pg'
 gem 'puma', '~> 3.0'
 # Push Notifications
 gem 'apnotic', :git => 'https://github.com/kylejm/apnotic.git', :branch => 'init-with-data'
-
 # Exception Monitoring
 gem 'rollbar'
+
+# Admin Panel
+gem 'activeadmin'
+gem 'devise'
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
 # gem 'rack-cors'

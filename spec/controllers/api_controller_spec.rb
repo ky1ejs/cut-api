@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe ApplicationController, :type => :controller do
+RSpec.describe ApiController, :type => :controller do
   it "saves given UUID and type" do
     platform = 'ios'
     uuid = '2a2096ff-ed6c-450d-bdb4-98757793fdeb'

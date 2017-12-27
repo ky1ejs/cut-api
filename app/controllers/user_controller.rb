@@ -1,4 +1,4 @@
-class UserController < ApplicationController
+class UserController < ApiController
   def get_current_user
     render json: device.user
   end
