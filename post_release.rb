@@ -12,7 +12,7 @@ end
 
 print_message 'ENVIRONMENT = $ENVIRONMENT'
 run'bundle exec rake db:migrate'
-if ENV['RAILS_ENV']&.uppercase == 'PRODUCTION'
+if ENV['RAILS_ENV']&.upcase == 'PRODUCTION'
   run 'bundle exec rake db:seed'
   run 'bundle exec rake films:fetch_flixster'
 end
