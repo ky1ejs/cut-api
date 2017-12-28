@@ -1,4 +1,4 @@
-class FeedController < ApplicationController
+class FeedController < ApiController
   def index
     user = device.user
     watches = user.following.map(&:watch_list_records)

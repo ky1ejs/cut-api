@@ -2,7 +2,7 @@
   "name": "cut-api",
   "description": "",
   "scripts": {
-    "postdeploy": "rake db:migrate && rake films:fetch_flixster"
+    "postdeploy": ""
   },
   "env": {
     "APNS_KEY_ID": {

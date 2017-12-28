@@ -1,4 +1,4 @@
-class SearchController < ApplicationController
+class SearchController < ApiController
   def search
     user_results = User.where "username LIKE ?", "%#{params[:term]}%"
     user_results_json = user_results.map { |u| UserSerializer.new(u).serializable_hash }

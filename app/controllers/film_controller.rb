@@ -1,4 +1,4 @@
-class FilmController < ApplicationController
+class FilmController < ApiController
   def index
     case params[:filter]
     when "releasing-soon"
