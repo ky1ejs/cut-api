@@ -1,25 +1,18 @@
-system "echo '###########'"
-system "echo 'ENVIRONMENT'"
-system 'echo $ENVIRONMENT'
-system "echo '###########'"
-system "echo ''"
-system "echo ''"
-system "echo '###########'"
-system "echo 'Run bundle exec rake db:migrate'"
-system "echo '###########'"
-system 'bundle exec rake db:migrate'
-if ENV['ENVIRONMENT']&.uppercase != 'PRODUCTION'
-  system "echo ''"
-  system "echo ''"
-  system "echo '###########'"
-  system "echo 'Run bundle exec rake db:seed'"
-  system "echo '###########'"
-  system 'bundle exec rake db:seed'
+def run(cmd)
+  print_message "Run #{cmd}"
+  system cmd
+end
 
-  system "echo ''"
-  system "echo ''"
+def print_message(message)
   system "echo '###########'"
-  system "echo 'Run bundle exec rake films:fetch_flixster'"
+  system "echo \"#{message}\""
   system "echo '###########'"
-  system 'bundle exec rake films:fetch_flixster'
+end
+
+
+print_message 'ENVIRONMENT = $ENVIRONMENT'
+run'bundle exec rake db:migrate'
+if ENV['RAILS_ENV']&.uppercase == 'PRODUCTION'
+  run 'bundle exec rake db:seed'
+  run 'bundle exec rake films:fetch_flixster'
 end
