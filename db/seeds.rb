@@ -293,4 +293,4 @@ Watch.create(user: fabio, film: films[6], rating: 4.0)
 Watch.create(user: arun, film: films[2])
 Watch.create(user: arun, film: films[13], rating: 4.0)
 
-AdminUser.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password') if Rails.env.development?
+AdminUser.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password') unless Rails.env.production?

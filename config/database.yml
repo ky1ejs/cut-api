@@ -14,6 +14,10 @@ test:
   <<: *default
   database: cut-db_test
 
+staging:
+  <<: *default
+  url: <%= ENV['DATABASE_URL'] %>
+
 production:
   <<: *default
   url: <%= ENV['DATABASE_URL'] %>
