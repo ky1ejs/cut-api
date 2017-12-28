@@ -1,5 +1,5 @@
-bundle exec rake db:migrate
+exec 'bundle exec rake db:migrate'
 if ENV['ENVIRONMENT']&.uppercase != 'PRODUCTION'
-  bundle exec rake db:seed
-  bundle exec rake films:fetch_flixster
+  exec 'bundle exec rake db:seed'
+  exec 'bundle exec rake films:fetch_flixster'
 end
