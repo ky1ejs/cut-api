@@ -20,6 +20,12 @@ ActiveAdmin.register Film do
     column :posters do |film|
       film.posters.count
     end
+
+    actions
+  end
+  
+  action_item :flixster_data, only: :show do
+    link_to 'Flixster Data', "#{resource.id}/flixster_data"
   end
 
   show do

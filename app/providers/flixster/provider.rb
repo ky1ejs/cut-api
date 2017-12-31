@@ -1,13 +1,13 @@
 module Flixster
   class Provider
-    def self.get_film_with_id(id)
+    def self.get_film_json_with_id(id)
       query = {
-        "cbr" => "1",
-        "country" => "US",
-        "deviceType" => "iPhone",
-        "locale" => "en_GB",
-        "version" => "7.13.3",
-        "view" => "long"
+        'cbr' => '1',
+        'country' => 'US',
+        'deviceType' => 'iPhone',
+        'locale' => 'en_GB',
+        'version' => '7.13.3',
+        'view' => 'long'
       }
 
       url = "https://api.flixster.com/iphone/api/v2/movies/#{id}.json"
@@ -18,12 +18,14 @@ module Flixster
         puts exception
       end
 
-      return if response      == nil
+      return if response.nil?
       return if response.code != 200
 
-      json = JSON.parse response, symbolize_names: true
+      JSON.parse response, symbolize_names: true
+    end
 
-      parse_film(json)
+    def self.get_film_with_id(id)
+      parse_film(get_film_json_with_id(id))
     end
 
     def self.parse_film(json)
@@ -60,7 +62,7 @@ module Flixster
 
       # Posters
       urls = Set.new json[:poster].values
-      f.posters = urls.select { |url| url.length > 0 }.map { |url| parse_poster url }.compact
+      f.posters = urls.reject(&:empty?).map { |url| parse_poster url }.compact
 
       # Ratings
       reviews = json[:reviews]
@@ -88,10 +90,10 @@ module Flixster
       trailer_json = json[:trailer]
       trailer_preview_image = trailer_json[:thumbnail]
       flixster_cut__quality_map = {
-          :low => :low,
-          :med => :medium,
-          :high => :high,
-          :hd => :hd
+        low: :low,
+        med: :medium,
+        high: :high,
+        hd: :hd
       }
       f.trailers = flixster_cut__quality_map.map { |k, v|
         t = Trailer.new
@@ -111,8 +113,8 @@ module Flixster
       width = size.try(:[], :width).try { to_i }
       height = size.try(:[], :height).try { to_i }
 
-      return if width == nil || width.to_i == 0
-      return if height == nil || height.to_i == 0
+      return if width.nil? || width.to_i == 0
+      return if height.nil? || height.to_i == 0
       return if width >= height
 
       poster = Poster.new
