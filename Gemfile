@@ -21,6 +21,8 @@ gem 'puma', '~> 3.0'
 gem 'apnotic', :git => 'https://github.com/kylejm/apnotic.git', :branch => 'init-with-data'
 # Exception Monitoring
 gem 'rollbar'
+# Checking image sizes
+gem 'fastimage'
 
 # Admin Panel
 gem 'activeadmin'

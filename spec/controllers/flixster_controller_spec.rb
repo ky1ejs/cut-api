@@ -1,18 +1,17 @@
-require "rails_helper"
+require 'rails_helper'
 
-RSpec.describe FlixsterController, :type => :controller do
-  it "updates existing films" do
+RSpec.describe FlixsterController, type: :controller do
+  it 'updates existing films' do
     provider_film_id = 1000
     f = create(:flixster_film, provider_film_id: provider_film_id)
 
-    title = "Interstellar"
+    title = 'Interstellar'
     running_time = 97
-    running_time_description = "1 hr. 37 min."
+    running_time_description = '1 hr. 37 min.'
     theater_release_date = Date.new(2017, 4, 7)
-    poster_width = 61
-    poster_height = 91
-    poster_size = :thumbnail
-    synopsis = "Best movie ever"
+    poster_width = 300
+    poster_height = 444
+    synopsis = 'Best movie ever'
 
     flixster_num_of_scores = 1134
     flxster_user_score = 63
@@ -20,22 +19,19 @@ RSpec.describe FlixsterController, :type => :controller do
     rotten_tomatoes_score = 50
 
     json = create(:flixster_film_json,
-      id: provider_film_id,
-      title: title,
-      runningTime: running_time_description,
-      theaterReleaseDate: {
-        :year => theater_release_date.year.to_s,
-        :month => theater_release_date.month.to_s,
-        :day => theater_release_date.day.to_s
-      },
-      synopsis: synopsis,
-      poster_size: poster_size,
-      poster_width: poster_width,
-      poster_height: poster_height,
-      user_score_count: flixster_num_of_scores,
-      user_score: flxster_user_score,
-      rotten_tomatoes_score: rotten_tomatoes_score
-    )
+                  id: provider_film_id,
+                  title: title,
+                  runningTime: running_time_description,
+                  theaterReleaseDate: {
+                    year: theater_release_date.year.to_s,
+                    month: theater_release_date.month.to_s,
+                    day: theater_release_date.day.to_s
+                  },
+                  poster_size: "#{poster_width}x#{poster_height}",
+                  synopsis: synopsis,
+                  user_score_count: flixster_num_of_scores,
+                  user_score: flxster_user_score,
+                  rotten_tomatoes_score: rotten_tomatoes_score)
 
     movies_url_regex = Regexp.new FlixsterController.movies_url
     stub_request(:get, movies_url_regex).to_return(status: 200, body: [json].to_json)

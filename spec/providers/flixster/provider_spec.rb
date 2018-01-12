@@ -6,8 +6,8 @@ RSpec.describe Flixster::Provider, :type => :class do
     running_time = 97
     running_time_description = "1 hr. 37 min."
     theater_release_date = Date.new(2017, 4, 7)
-    poster_width = 61
-    poster_height = 91
+    poster_width = 500
+    poster_height = 740
     synopsis = "Best movie ever"
 
     flixster_num_of_scores = 1134
@@ -24,8 +24,7 @@ RSpec.describe Flixster::Provider, :type => :class do
         :day => theater_release_date.day.to_s
       },
       synopsis: synopsis,
-      poster_width: poster_width,
-      poster_height: poster_height,
+      poster_size: "#{poster_width}x#{poster_height}",
       user_score_count: flixster_num_of_scores,
       user_score: flxster_user_score,
       rotten_tomatoes_score: rotten_tomatoes_score
@@ -60,49 +59,30 @@ RSpec.describe Flixster::Provider, :type => :class do
   end
 
   it "parses poster urls" do
-    urls = [
+    images = [
       {
-        'width' => 61,
-        'height' => 91,
-        'url' => "http://resizing.flixster.com/6IW9Gb-ooPSDOKJQr2XnAPbjB3c=/61x91/v1.bTsxMjM1MDcyMDtqOzE3Mzk3OzIwNDg7NDE4Nzs2MTM3"
+        'width' => 300,
+        'height' => 444,
+        'name' => "interstellar300x444.jpg"
       },
       {
-        'width' => 120,
-        'height' => 176,
-        'url' => "http://resizing.flixster.com/8L2FdKU2P_EpHtwhhWoHC9Ukm-k=/120x176/v1.bTsxMjM1MDcyMDtqOzE3Mzk3OzIwNDg7NDE4Nzs2MTM3"
+          'width' => 500,
+          'height' => 740,
+          'name' => "interstellar500x740.jpg"
       },
       {
-        'width' => 180,
-        'height' => 264,
-        'url' => "http://resizing.flixster.com/EcMNRjyAjfs9nxlvH3i2-BWOgG8=/180x264/v1.bTsxMjM1MDcyMDtqOzE3Mzk3OzIwNDg7NDE4Nzs2MTM3"
-      },
-      {
-        'width' => 320,
-        'height' => 469,
-        'url' => "http://resizing.flixster.com/jc5OvtgurU9FBygm04e7ZXF1fb8=/320x469/v1.bTsxMjM1MDcyMDtqOzE3Mzk3OzIwNDg7NDE4Nzs2MTM3"
-      },
-      {
-        'width' => 500,
-        'height' => 733,
-        'url' => "http://resizing.flixster.com/rJ9l4LrDu0Boko_L0XnsskoPKTw=/500x733/v1.bTsxMjM1MDcyMDtqOzE3Mzk3OzIwNDg7NDE4Nzs2MTM3"
-      },
-      {
-        'width' => 800,
-        'height' => 1173,
-        'url' => "http://resizing.flixster.com/RXOK7oZALdWcYNg7xRCgw4LaqCE=/800x1173/v1.bTsxMjM1MDcyMDtqOzE3Mzk3OzIwNDg7NDE4Nzs2MTM3"
-      },
-      {
-        'width' => 4187,
-        'height' => 6137,
-        'url' => "http://resizing.flixster.com/Ol6Vre-t7dA_kFQ5YtZ7G1kRIwY=/4187x6137/v1.bTsxMjM1MDcyMDtqOzE3Mzk3OzIwNDg7NDE4Nzs2MTM3"
+          'width' => 620,
+          'height' => 918,
+          'name' => "interstellar620x918.jpg"
       }
     ]
-
-    urls.each do |url|
-      parsed_url = Flixster::Provider.parse_poster url['url']
-      expect(parsed_url.url).to eq url['url']
-      expect(parsed_url.width).to eq url['width']
-      expect(parsed_url.height).to eq url['height']
+    images.each do |image|
+      url = "https://posters.com/#{image['name']}"
+      stub_request(:any, url).to_return(body: file_fixture(image['name']).read, status: 200)
+      parsed_url = Flixster::Provider.parse_poster url
+      expect(parsed_url.url).to eq url
+      expect(parsed_url.width).to eq image['width']
+      expect(parsed_url.height).to eq image['height']
     end
   end
 end

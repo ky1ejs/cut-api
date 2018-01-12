@@ -30,6 +30,11 @@ SimpleCov.formatter = SimpleCov::Formatter::Codecov
 RSpec.configure do |config|
   config.before(:each) do
     stub_request(:get, /www.gravatar.com\/avatar\//).to_return(status: 200)
+
+    poster_fixture_sizes = ['300x444', '500x740', '620x918']
+    poster_fixture_sizes.each do |size|
+      stub_request(:get, /poster.com\/#{Regexp.quote(size)}/).to_return(body: file_fixture("interstellar#{size}.jpg").read, status: 200)
+    end
   end
 
   # rspec-expectations config goes here. You can use an alternate

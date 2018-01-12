@@ -86,7 +86,7 @@ module Flixster
       end
       f.ratings = ratings
 
-      # Posters
+      # Trailers
       trailer_json = json[:trailer]
       trailer_preview_image = trailer_json[:thumbnail]
       flixster_cut__quality_map = {
@@ -107,19 +107,14 @@ module Flixster
     end
 
     def self.parse_poster(url)
-      regex = /https?:\/\/resizing.flixster.com\/.+\/(?<width>[0-9]+)x(?<height>[0-9]+)\/.+/
-      size = url.match regex
+      size = FastImage.size(url)
 
-      width = size.try(:[], :width).try { to_i }
-      height = size.try(:[], :height).try { to_i }
-
-      return if width.nil? || width.to_i == 0
-      return if height.nil? || height.to_i == 0
-      return if width >= height
+      return if size[0].nil? || size[0].zero? || size[1].nil? || size[1].to_i.zero?
+      return if size[0] >= size[1]
 
       poster = Poster.new
-      poster.width = width
-      poster.height = height
+      poster.width = size[0]
+      poster.height = size[1]
       poster.url = url
       poster
     end

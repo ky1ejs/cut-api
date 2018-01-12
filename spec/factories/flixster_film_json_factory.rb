@@ -7,11 +7,10 @@ FactoryGirl.define do
     skip_create
 
     transient do
-      poster_width          { 61 }
-      poster_height         { 91 }
       user_score_count      { 1000 }
       user_score            { 89 }
       rotten_tomatoes_score { 83 }
+      poster_size           { '300x444' }
     end
 
     id "771382349"
@@ -48,7 +47,7 @@ FactoryGirl.define do
       }
     ]}
     synopsis "Sweet ass movie"
-    poster {{ :thumbnail => "http://resizing.flixster.com/fViM/#{poster_width}x#{poster_height}/32131" }}
+    poster {{ :thumbnail => "https://poster.com/#{poster_size}" }}
     reviews {{
       :flixster => {
         :numScores => user_score_count,

@@ -23,7 +23,7 @@ ActiveAdmin.register Film do
 
     actions
   end
-  
+
   action_item :flixster_data, only: :show do
     link_to 'Flixster Data', "#{resource.id}/flixster_data"
   end
