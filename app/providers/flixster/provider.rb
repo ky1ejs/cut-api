@@ -62,7 +62,9 @@ module Flixster
 
       # Posters
       urls = Set.new json[:poster].values
-      f.posters = urls.reject(&:empty?).map { |url| parse_poster url }.compact
+      posters = urls.reject(&:empty?).map { |url| parse_poster url }.compact
+      posters = posters.uniq { |p| "#{p.width}x#{p.height}" }
+      f.posters = posters
 
       # Ratings
       reviews = json[:reviews]
