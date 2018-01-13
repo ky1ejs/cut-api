@@ -109,9 +109,9 @@ module Flixster
     def self.parse_poster(url)
       Rollbar.scope!(poster_url: url)
 
-      size = FastImage.size(url)
+      size = FastImage.size(url, timeout: 5.0)
 
-      # return if size.nil?
+      return if size.nil? # couldn't fetch size
       return if size[0].nil? || size[0].zero? || size[1].nil? || size[1].to_i.zero?
       return if size[0] >= size[1]
 
