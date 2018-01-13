@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171227003206) do
+ActiveRecord::Schema.define(version: 20180113213045) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -109,7 +109,6 @@ ActiveRecord::Schema.define(version: 20171227003206) do
     t.integer  "height",     null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["url"], name: "index_posters_on_url", unique: true, using: :btree
     t.index ["width", "height", "film_id"], name: "index_posters_on_width_and_height_and_film_id", unique: true, using: :btree
   end
 
