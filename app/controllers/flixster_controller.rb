@@ -25,7 +25,7 @@ class FlixsterController < ApiController
     return if response.code != 200
 
     json = JSON.parse response, symbolize_names: true
-    json.map { |json| update_or_create_film_with_id json[:id] }
+    json.map { |film| update_or_create_film_with_id film[:id] }
   end
 
   def search(term)
