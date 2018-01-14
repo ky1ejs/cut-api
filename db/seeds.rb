@@ -1,4 +1,4 @@
-films = Film.create!([
+films = Film.create([
   {title: "Dunkirk", theater_release_date: "2017-07-21 00:00:00", running_time: 107, synopsis: "Acclaimed auteur Christopher Nolan directs this World War II thriller about the evacuation of Allied troops from the French city of Dunkirk before Nazi forces can take hold. Tom Hardy, Kenneth Branagh and Mark Rylance co-star, with longtime Nolan collaborator Hans Zimmer providing the score."},
   {title: "SHOT!: The Psycho-Spiritual Mantra of Rock", theater_release_date: "2017-04-07 00:00:00", running_time: 91, synopsis: "SHOT! THE PSYCHO-SPIRITUAL MANTRA OF ROCK is an odyssey into the colorful and bohemian tales of rock 'n' roll's history. A cinematic adventure that delves deep into the mind of one of rock's greatest living photographers: Mick Rock. Through the poignant lens of rock 'n' roll mythology; icon-maker, psychedelic explorer, poet, and custodian of dreams Mick Rock navigates his story from the glam rock shimmer of London to the snarl of NYC punk, and deep into the new millennium. Mick turns inward to face himself and the experiences as the visual record-keeper of myths and legends that propelled him into a living icon in this rock n' roll comeback story. Mick's now infamous images of the likes of David Bowie, Queen, Syd Barrett (Founding member of Pink Floyd), Blondie, Lou Reed and Iggy Pop are now imprinted on our collective psyche forever and generations to come. Presented in his own words, juxtaposed with spellbinding images and exclusive never-seen or heard archival film footage, audio recordings and original material, this film reveals an enigmatic Rock and his adventurous life both behind the camera and as an integral member of the artist's entourage working with and shaping some of the most outrageous, recognized and accomplished musicians and personalities of the past forty years. An icon-maker, and icon in his own right, Rock is among a very few photographers who himself is photographed walking red carpets in Los Angeles, London, New York and around the globe."},
   {title: "War for the Planet of the Apes", theater_release_date: "2017-07-14 00:00:00", running_time: 140, synopsis: "In War for the Planet of the Apes, the third chapter of the critically acclaimed blockbuster franchise, Caesar and his apes are forced into a deadly conflict with an army of humans led by a ruthless Colonel. After the apes suffer unimaginable losses, Caesar wrestles with his darker instincts and begins his own mythic quest to avenge his kind. As the journey finally brings them face to face, Caesar and the Colonel are pitted against each other in an epic battle that will determine the fate of both their species and the future of the planet."},
@@ -21,7 +21,7 @@ films = Film.create!([
 ids = ["771429025", "771451952", "771373077", "771373068", "771359099", "771432063", "771423054", "771456528", "771436024", "771424793", "771400425", "771449914", "771468387", "771382349", "771307163", "771434104", "771324803"]
 
 for i in 0..ids.count - 1
-  FilmProvider.create!({provider: "flixster", film_id: films[i].id, provider_film_id: ids[i]})
+  FilmProvider.create({provider: "flixster", film_id: films[i].id, provider_film_id: ids[i]})
 end
 
 posters = [
@@ -179,7 +179,7 @@ for i in 0..posters.count - 1
   poster_group.each do |url|
     poster = Flixster::Provider.parse_poster url
     poster.film = film
-    poster.save!
+    poster.save
   end
 end
 
@@ -262,7 +262,7 @@ for i in 0..ratings.count - 1
     r.count = data[:count]
     r.source = data[:source]
     r.film = film
-    r.save!
+    r.save
   end
 end
 
@@ -281,8 +281,8 @@ arun.followers = [denny, fabio]
 denny.followers = [fabio]
 kyle.followers = [fabio]
 
-Watch.create!(user: kyle, film: films[0])
-Watch.create!(user: kyle, film: films[12], rating: 4.0)
+Watch.create(user: kyle, film: films[0])
+Watch.create(user: kyle, film: films[12], rating: 4.0)
 
 Watch.create(user: denny, film: films[2])
 Watch.create(user: denny, film: films[10])
@@ -293,4 +293,4 @@ Watch.create(user: fabio, film: films[6], rating: 4.0)
 Watch.create(user: arun, film: films[2])
 Watch.create(user: arun, film: films[13], rating: 4.0)
 
-AdminUser.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password') unless Rails.env.production?
+AdminUser.create(email: 'admin@example.com', password: 'password', password_confirmation: 'password') unless Rails.env.production?
