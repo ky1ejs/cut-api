@@ -15,11 +15,12 @@ ActiveAdmin.register Film do
   index do
     column :title
     column :running_time
-    column :created_at
-    column :updated_at
+    column :theater_release_date
     column :posters do |film|
       film.posters.count
     end
+    column :created_at
+    column :updated_at
 
     actions
   end
@@ -79,6 +80,8 @@ ActiveAdmin.register Film do
   filter :created_at
   filter :updated_at
   filter :poster_count, as: :numeric
+  filter :theater_release_date
+  filter :theater_release_date_null, :as => :boolean
 end
 
 class Film
