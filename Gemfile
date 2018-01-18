@@ -14,7 +14,7 @@ gem 'active_model_serializers'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.0.2'
 # Use PostgreSQL as the database for Active Record
-gem 'pg'
+gem 'pg', '< 1.0'
 # Use Puma as the app server
 gem 'puma', '~> 3.0'
 # Push Notifications
@@ -23,7 +23,6 @@ gem 'apnotic', :git => 'https://github.com/kylejm/apnotic.git', :branch => 'init
 gem 'rollbar'
 # Checking image sizes
 gem 'fastimage'
-
 # Admin Panel
 gem 'activeadmin'
 gem 'devise'
