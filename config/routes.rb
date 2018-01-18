@@ -22,6 +22,10 @@ Rails.application.routes.draw do
     scope '/sign-up' do
       post    '/' => 'user#create_login'
     end
+
+    scope '/qr' do
+      get    '/' => 'user#get_qr_code'
+    end
     ######################################################
 
     ######################################################

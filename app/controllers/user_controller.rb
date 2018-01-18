@@ -97,4 +97,15 @@ class UserController < ApiController
 
     render json: device.user
   end
+
+  def get_qr_code
+    if !device.user.is_full_user
+      render status: 422 # user is already logged in on this device
+      return
+    end
+
+    qr_code = RQRCode::QRCode.new(device.user.username)
+    png = qr_code.as_png size: 500, border_modules: 0, module_px_size: 0
+    render text: png.to_s, type: 'image/png'
+  end
 end

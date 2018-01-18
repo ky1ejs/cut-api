@@ -74,6 +74,7 @@ GEM
     byebug (9.1.0)
     case_transform (0.2)
       activesupport
+    chunky_png (1.3.8)
     codecov (0.1.10)
       json
       simplecov
@@ -239,6 +240,8 @@ GEM
       railties (>= 4.2.0, < 5.3)
     rollbar (2.15.5)
       multi_json
+    rqrcode (0.10.1)
+      chunky_png (~> 1.0)
     rspec (3.7.0)
       rspec-core (~> 3.7.0)
       rspec-expectations (~> 3.7.0)
@@ -322,6 +325,7 @@ DEPENDENCIES
   puma (~> 3.0)
   rails (~> 5.0.2)
   rollbar
+  rqrcode
   rspec-rails (~> 3.5)
   spring
   spring-watcher-listen (~> 2.0.0)
