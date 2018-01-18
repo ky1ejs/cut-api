@@ -105,7 +105,7 @@ class UserController < ApiController
     end
 
     qr_code = RQRCode::QRCode.new(device.user.username)
-    png = qr_code.as_png size: 500, border_modules: 0, module_px_size: 0
+    png = qr_code.as_png size: 1500, border_modules: 0, module_px_size: 0
     render text: png.to_s, type: 'image/png'
   end
 end
