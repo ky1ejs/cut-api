@@ -1,10 +1,14 @@
 class WatchController < ApiController
   def index_watch_list
-    render json: device.user.want_to_watch_list.map(&:film)
+    user = User.find_by(username: params[:username])
+    user ||= device.user
+    render json: user.want_to_watch_list.map(&:film)
   end
 
   def index_ratings
-    render json: device.user.rated_list.map(&:film)
+    user = User.find_by(username: params[:username])
+    user ||= device.user
+    render json: user.rated_list
   end
 
   def create_watch

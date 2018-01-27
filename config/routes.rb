@@ -70,6 +70,8 @@ Rails.application.routes.draw do
       get     '/'  => 'user#get_user'
       post    '/'  => 'user#follow_unfollow_user'
       delete  '/'  => 'user#follow_unfollow_user'
+      get '/ratings' => 'watch#index_ratings'
+      get '/watch-list' => 'watch#index_watch_list'
     end
 
     scope '/feed' do
