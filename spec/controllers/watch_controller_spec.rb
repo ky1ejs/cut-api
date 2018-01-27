@@ -29,7 +29,7 @@ RSpec.describe WatchController, type: :controller do
     watch = create(:rated_watch, user: @device.user, film: @film)
 
     allow_any_instance_of(FilmSerializer).to  receive(:scope).and_return(@device)
-    expected_json = [FilmSerializer.new(@film).serializable_hash]
+    expected_json = [WatchSerializer.new(watch).serializable_hash]
 
     request.headers[:HTTP_DEVICE_ID] = @device.device_id
     get :index_ratings

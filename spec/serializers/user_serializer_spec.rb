@@ -6,9 +6,8 @@ RSpec.describe UserSerializer do
     username = 'test'
     u = create(:full_user, email: email, username: username)
 
-    hash = UserSerializer.new(u).serializable_hash
+    hash = UserSerializer.new(u, scope: u.devices.first).serializable_hash
 
-    expect(hash[:id]).to eq u.id
     expect(hash[:email]).to eq email
     expect(hash[:username]).to eq username
     expect(hash[:is_full_user]).to eq true
