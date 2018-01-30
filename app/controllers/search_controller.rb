@@ -6,8 +6,8 @@ class SearchController < ApiController
     film_results = FlixsterController.new.search(params[:term]) if film_results.count < 1 || params[:search_all_providers] == true
 
     json = {
-      user: user_results.map { |u| UserSerializer.new(u).serializable_hash },
-      films: film_results.map { |f| FilmSerializer.new(f).serializable_hash }
+      users: user_results&.map { |u| UserSerializer.new(u, scope: device).serializable_hash },
+      films: film_results&.map { |f| FilmSerializer.new(f, scope: device).serializable_hash }
     }
 
     render json: json

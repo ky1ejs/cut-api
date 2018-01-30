@@ -19,4 +19,8 @@ class ApiController < ActionController::API
     @device.user.save!
     @device
   end
+
+  def queried_user
+    User.find_by(username: params[:username]) || device.user
+  end
 end

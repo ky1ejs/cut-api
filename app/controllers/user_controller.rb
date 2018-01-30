@@ -7,8 +7,12 @@ class UserController < ApiController
     render json: User.find_by(username: params[:username])
   end
 
-  def find_user
+  def index_followers
+    render json: queried_user.followers
+  end
 
+  def index_following
+    render json: queried_user.following
   end
 
   def create_login

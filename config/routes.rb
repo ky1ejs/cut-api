@@ -72,6 +72,8 @@ Rails.application.routes.draw do
       delete  '/'  => 'user#follow_unfollow_user'
       get '/ratings' => 'watch#index_ratings'
       get '/watch-list' => 'watch#index_watch_list'
+      get '/followers' => 'user#index_followers'
+      get '/following' => 'user#index_following'
     end
 
     scope '/feed' do
