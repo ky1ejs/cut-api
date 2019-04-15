@@ -45,4 +45,58 @@ RSpec.describe UserSerializer do
     expect(hash[:following_count]).to eq 3
     expect(hash[:follower_count]).to eq 3
   end
+
+  it 'doesn\' include certain keys for authenticated non-full-users' do
+    u = create(:user)
+
+    hash = UserSerializer.new(u, scope: u.devices.first).serializable_hash
+
+    expect(hash.keys.include?(:email)).to eq false
+    expect(hash.keys.include?(:username)).to eq false
+    expect(hash.keys.include?(:following)).to eq false
+    expect(hash.keys.include?(:following_count)).to eq false
+    expect(hash.keys.include?(:follower_count)).to eq false
+    expect(hash.keys.include?(:profile_image_url)).to eq false
+
+    expect(hash.keys.include?(:id)).to eq true
+    expect(hash.keys.include?(:watch_list_count)).to eq true
+    expect(hash.keys.include?(:rated_count)).to eq true
+    expect(hash.keys.include?(:is_full_user)).to eq true
+  end
+
+  it 'includes certain keys for authenticated full-users' do
+    u = create(:full_user)
+
+    hash = UserSerializer.new(u, scope: u.devices.first).serializable_hash
+
+    expect(hash.keys.include?(:following)).to eq false
+
+    expect(hash.keys.include?(:id)).to eq true
+    expect(hash.keys.include?(:email)).to eq true
+    expect(hash.keys.include?(:username)).to eq true
+    expect(hash.keys.include?(:following_count)).to eq true
+    expect(hash.keys.include?(:follower_count)).to eq true
+    expect(hash.keys.include?(:profile_image_url)).to eq true
+    expect(hash.keys.include?(:watch_list_count)).to eq true
+    expect(hash.keys.include?(:rated_count)).to eq true
+    expect(hash.keys.include?(:is_full_user)).to eq true
+  end
+
+  it 'includes certain keys for non-authenticated full-users' do
+    u = create(:full_user)
+
+    hash = UserSerializer.new(u).serializable_hash
+
+    expect(hash.keys.include?(:id)).to eq true
+    expect(hash.keys.include?(:username)).to eq true
+    expect(hash.keys.include?(:following)).to eq false
+    expect(hash.keys.include?(:following_count)).to eq true
+    expect(hash.keys.include?(:follower_count)).to eq true
+    expect(hash.keys.include?(:profile_image_url)).to eq true
+    expect(hash.keys.include?(:watch_list_count)).to eq true
+    expect(hash.keys.include?(:rated_count)).to eq true
+
+    expect(hash.keys.include?(:email)).to eq false
+    expect(hash.keys.include?(:is_full_user)).to eq false
+  end
 end

@@ -1,10 +1,13 @@
 class UserSerializer < ActiveModel::Serializer
-  attribute :email,             if: -> { is_authenticated_user }
+  attribute :email,             if: -> { is_authenticated_user && object.is_full_user }
   attribute :is_full_user,      if: -> { is_authenticated_user }
   attribute :following,         if: -> { !is_authenticated_user && device != nil }
-  attribute :profile_image_url, key: :profile_image
+  attribute :username,          if: -> { object.is_full_user }
+  attribute :follower_count,    if: -> { object.is_full_user }
+  attribute :following_count,   if: -> { object.is_full_user }
+  attribute :profile_image_url, key: :profile_image, if: -> { object.is_full_user }
 
-  attributes :username, :follower_count, :following_count, :watch_list_count, :rated_count
+  attributes :id, :watch_list_count, :rated_count
 
   def following
     device.user.following.map(&:id).include? object.id
