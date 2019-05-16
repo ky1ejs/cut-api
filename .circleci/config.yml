@@ -20,8 +20,10 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Check bundler version
-          command: bundle -v
+          name: Install correct bundler version
+          command: |
+            echo 'export BUNDLER_VERSION=$(cat Gemfile.lock | tail -1 | tr -d " ")' >> $BASH_ENV
+            gem install bundler
       - restore_cache:
           keys:
             - gems-{{ checksum "Gemfile.lock" }}
